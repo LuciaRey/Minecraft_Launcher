@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="./style.css">
+    <meta charset="utf-8">
+    <title>DungeonCraft</title>
+  </head>
+  <body>
+    <div class="nickname">
+        <fieldset>
+            <legend>Изменить ник</legend>
+            <label for="name">
+                <p id="p">Ваш текущий ник: </p>
+                <button class="settingsButton" id ="changeName" onclick="changeName()">Ввести новый ник</button>
+            </label>
+        </fieldset>
+        <div class="java">
+            <fieldset>
+                <legend>Аргументы java</legend>
+                <label for="javaargs">
+                    <input required type="text" id="javaargs" value="java -Xmx4G -Xmn196M -XX:+UseConcMarkSweepGC -jar server.jar">
+                </label>
+            </fieldset>
+        </div>
+    </div>
+    <script src="./settings.js"></script>
+  </body>
+</html>
