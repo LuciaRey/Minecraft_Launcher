@@ -12,7 +12,7 @@
     "publish": "electron-forge publish",
     "lint": "eslint src --color"
   },
-  "keywords"  : [],
+  "keywords": [],
   "author": "V_1nc3nt",
   "license": "MIT",
   "config": {
@@ -50,7 +50,8 @@
   "dependencies": {
     "bootstrap": "^5.3.3",
     "electron-compile": "^6.4.4",
-    "electron-squirrel-startup": "^1.0.1"
+    "electron-squirrel-startup": "^1.0.1",
+    "fs-extra": "^11.2.0"
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",

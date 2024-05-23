@@ -72,10 +72,8 @@ const createNewWindow = (windowName, windWidth, windHeight, url) =>
       }
     });
   
-    // and load the index.html of the app.
     windowName.loadURL(url);
   
-    // Open the DevTools.
     windowName.webContents.openDevTools();
   
     windowName.show()
@@ -90,6 +88,19 @@ const authorization = () =>
     createNewWindow(authWindow, 400, 300, `file://${__dirname}/auth.html`)
   }
 
+function writeValue(path, value)
+{
+  fs.writeFile(path, value, err => {
+      if (err) {
+        console.log('Cant write to file ' + path);
+        throw err;
+      } else {
+        console.log('File was created')
+      }
+    });
+}
+  
+
 fs.readdir('./', (err, files) => {
   if (err) throw err;
   else {
@@ -97,7 +108,7 @@ fs.readdir('./', (err, files) => {
     {
       fs.readFile('./profile.txt', 'utf8', function(err, data){
         if(err) { 
-          console.log('Cant read file'); 
+          console.log('Cant read profile'); 
           }else { 
             console.log(data);
           } 
@@ -107,6 +118,22 @@ fs.readdir('./', (err, files) => {
     {
       authorization()
     }
+    if (files.includes("minecraft_path.txt")) 
+      {
+        fs.readFile('./minecraft_path.txt', 'utf8', function(err, data){
+          if(err) { 
+            console.log('Cant read minecraft path'); 
+            }else { 
+              console.log(data);
+            } 
+        });
+      }
+      else 
+      {
+        var path = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share")
+ 
+        writeValue('./minecraft_path.txt', path /*+ "/.dungeoncraft" */);
+      }
   }
 });
 
@@ -121,11 +148,113 @@ ipcMain.on('changeName', (event, arg) => {
   authorization();
 });
 
-
-
-
 const launch = () => 
 {
   
 };
+
+
+function giveMeFiles (dir, basedir, files){
+  files = files || [];
+    var allFiles = fs.readdirSync(dir);
+    for (var i =0; i<allFiles.length; i++){
+        var name = dir + '/' + allFiles[i];
+        var filename = basedir + allFiles[i];
+        if (fs.statSync(name).isDirectory()){
+            giveMeFiles (name, basedir + allFiles[i] + "/", files);
+        } else {
+            files.push(filename);
+        }
+    }
+    return files;
+  };
+
+
+
+
+function getUncommonElements(a, b) {
+
+  var res = []
+
+  for (var x of a) {
+    if (!(b.toString().includes(x)))  {
+      res.push(x)
+    }
+  }
   
+  return res
+}
+
+function callback(err) {
+  if (err) throw err;
+}
+
+var minecraft_path;
+
+import { copyFile, constants } from 'fs';
+
+function copyDir(x, dest_path) 
+{
+  let basedir = "/";
+
+  if (x.length > 1)
+  {
+    for (let i = 0; i <= x.length - 2; i++)
+      {
+        if (!fs.existsSync(dest_path + basedir  + x[i]))
+          {
+            fs.mkdirSync(dest_path + basedir  + x[i]);
+          }
+        basedir += x[i] + "/";
+      }
+  }
+};
+
+fs.stat("./minecraft_path.txt", function (error, stats) {
+  fs.open("./minecraft_path.txt", "r", function (error, fd) {
+      var buffer = new Buffer.alloc(stats.size);
+      fs.read(fd, buffer, 0, buffer.length,
+          null, function (error, bytesRead, buffer) {
+              minecraft_path = buffer.toString("utf8");
+              if (!fs.existsSync(minecraft_path  + "\\.dungeoncraft")){
+                fs.mkdirSync(minecraft_path  + "\\.dungeoncraft");
+              }
+
+              let server_path = "D:\\Documents\\Github/LuciaRey.github.io";
+              let dest_path = minecraft_path + "\\test\\LuciaRey.github.io"
+
+              let a = giveMeFiles (server_path, "/", '');
+              let b = giveMeFiles (dest_path, "/", '');
+
+              if (a !== b) 
+                {
+                  let res = getUncommonElements(a, b);
+
+                  for (var x of res) {
+                    let y = x.split('/');
+                    y.shift();
+                    copyDir(y, dest_path);
+                    if (!fs.existsSync(dest_path + x)){
+                      copyFile(server_path + x, dest_path + x, callback);
+                      console.log(x + ' was copied');
+                    }
+                  }
+                };         
+
+              server_path = "D:\\Documents\\Github/test/.dungeoncraft/mods";
+              dest_path = minecraft_path  + "/.dungeoncraft/mods"
+
+              a = giveMeFiles (server_path, '');
+              b = giveMeFiles (dest_path, '');
+              if (a != b){
+                let res = getUncommonElements(b, a);
+                for (var x of res) {
+                    let y = x.split('/');
+                    y.shift();
+                    fs.remove(dest_path + x, callback);
+                    console.log(x + ' was deleted');
+                }
+              }   
+        });
+  });
+});
