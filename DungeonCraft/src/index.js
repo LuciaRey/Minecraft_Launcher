@@ -1,13 +1,8 @@
-import { readDirectory } from 'decompress-zip/lib/structures';
 import { app, BrowserWindow } from 'electron';
-import { file } from 'jszip';
-import { constrainedMemory, contextIsolated } from 'process';
-import { unzip } from 'zlib';
 
 const fs = require('fs');
-const extract = require('extract-zip')
+const extract = require('extract-zip');
 const ipcMain = require('electron').ipcMain;
-var DecompressZip = require('decompress-zip');
 const { DownloaderHelper } = require('node-downloader-helper');
 
 
@@ -18,15 +13,16 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
+let mainWindow = 'mainWindow';
 
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 710,
     height: 400,
+    titleBarStyle: 'hidden',
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
     }
   });
 
@@ -44,7 +40,6 @@ const createWindow = () => {
     mainWindow = null;
   });
 };
-
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -77,6 +72,7 @@ const createNewWindow = (windowName, windWidth, windHeight, url) =>
       modal: true,
       width: windWidth,
       height: windHeight,
+      titleBarStyle: 'hidden',
       webPreferences: {
         nodeIntegration: true
       }
@@ -84,7 +80,7 @@ const createNewWindow = (windowName, windWidth, windHeight, url) =>
   
     windowName.loadURL(url);
   
-    windowName.webContents.openDevTools();
+    //windowName.webContents.openDevTools();
   
     windowName.show()
   };
@@ -113,7 +109,7 @@ if (fs.existsSync("./profile.txt")){
     if(err) { 
       console.log('Cant read profile'); 
       }else { 
-        console.log(data);
+        //console.log(data);
       } 
   });
 }
@@ -130,13 +126,6 @@ ipcMain.on('settings', (event, arg) => {
 ipcMain.on('changeName', (event, arg) => {
   authorization();
 });
-
-ipcMain.on('launch', (event, arg) => {
-  const launch = () => {
-
-  }
-});
-
 
 function giveMeFiles (dir, basedir, files){
   files = files || [];
@@ -158,7 +147,7 @@ function getUncommonElements(a, b) {
   var res = [];
 
   for (var x of a) {
-    if (!(b.toString().includes(x)) && !b.toString().includes("saves") && !b.toString().includes("logs") && !b.toString().includes("crash-reports"))  {
+    if (!(b.toString().includes(x)) && (x.toString().includes("mods") || x.toString().includes("profile.json")))  {
       res.push(x);
     }
   }
@@ -207,8 +196,6 @@ function verifyFiles(src_path, dest_path, server_url){
     {
       let res = getUncommonElements(filesOnServer, filesOnClient);
 
-      console.log(res);
-
       if (res.length !== 0) {
         for (var x of res)
           {
@@ -241,18 +228,6 @@ function verifyFiles(src_path, dest_path, server_url){
             });
           }
       }
-    
-      /*
-      for (var x of res) {
-        let y = x.split('/');
-        y.shift();
-        copyDir(y, dest_path);
-        if (!fs.existsSync(dest_path + x)){
-          copyFile(src_path + x, dest_path + x, callback);
-          console.log(x + ' was copied');
-        }
-      }
-      */
     };   
   
     let serverMods = [];
@@ -319,12 +294,12 @@ if (!fs.existsSync(java_path + "/jdk-17.0.11")) {
   }
 }
 
-
-
 /*
-let src_path = "D:/Documents/GitHub/LuciaRey.github.io/dungeoncraft";
+Создание server.txt
 
-let files = giveMeFiles(src_path, '/');
+let serversrc_path = "D:/Documents/GitHub/LuciaRey.github.io/dungeoncraft";
+
+let files = giveMeFiles(serversrc_path, '/');
 
 let serverfiles = [];
 
@@ -336,52 +311,28 @@ for (var x of files)
       }
   }
 
-fs.writeFileSync("./server.txt", files);
+fs.writeFileSync("D:/Documents/GitHub/LuciaRey.github.io/dungeoncraft/server.txt", files);
 */
 
-let server_url = "https://luciarey.github.io/dungeoncraft";
+ipcMain.on('launch', (event, arg) => {
+  const launch = () => {
+    let server_url = "https://luciarey.github.io/dungeoncraft";
 
-if (fs.existsSync(minecraft_path + "/server.txt")) { fs.unlinkSync(minecraft_path + "/server.txt"); }
+    if (fs.existsSync(minecraft_path + "/server.txt")) { fs.unlinkSync(minecraft_path + "/server.txt"); }
 
-const dl = new DownloaderHelper(server_url + "/server.txt", minecraft_path);
+    const dl = new DownloaderHelper(server_url + "/server.txt", minecraft_path);
 
-dl.on('end', () => {
+    dl.on('end', () => {
   
-  let servertxt_path = minecraft_path + '/server.txt';
-  verifyFiles(servertxt_path, minecraft_path, server_url);
+      let servertxt_path = minecraft_path + '/server.txt';
+      verifyFiles(servertxt_path, minecraft_path, server_url);
+    });
 
+    dl.on('error', (err) => console.log('Download server.txt Failed' , err));
+    dl.start().catch(err => console.error(err));
+  }
 });
 
-dl.on('error', (err) => console.log('Download server.txt Failed' , err));
-dl.start().catch(err => console.error(err));
 
+//  https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.zip  <-- java 17 installation
 
-
-/*
-let server_url = 'https://luciarey.github.io/server.zip';
-let dest_path = minecraft_path + "/temp";
-
-if (!fs.existsSync(dest_path)) {
-  fs.mkdirSync(dest_path);
-  fs.mkdirSync(dest_path + "/decompressed");
-  fs.mkdirSync(dest_path + "/decompressed/mods");
-}
-
-if(!fs.existsSync(dest_path + "/server.zip")){
-  const dl = new DownloaderHelper(server_url, dest_path);
-
-  dl.on('end', () => {
-  
-    unzipFiles(dest_path, minecraft_path);
-
-  });
-
-  dl.on('error', (err) => console.log('Download Failed', err));
-  dl.start().catch(err => console.error(err));
-}
-
-
-
-
-https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.zip  <-- java 17 installation
-*/
