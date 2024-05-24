@@ -1,4 +1,14 @@
+import { readDirectory } from 'decompress-zip/lib/structures';
 import { app, BrowserWindow } from 'electron';
+import { file } from 'jszip';
+import { constrainedMemory, contextIsolated } from 'process';
+import { unzip } from 'zlib';
+
+const fs = require('fs');
+const extract = require('extract-zip')
+const ipcMain = require('electron').ipcMain;
+var DecompressZip = require('decompress-zip');
+const { DownloaderHelper } = require('node-downloader-helper');
 
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -79,8 +89,6 @@ const createNewWindow = (windowName, windWidth, windHeight, url) =>
     windowName.show()
   };
 
-const fs = require('fs');
-
 const authorization = () =>
   {
     let authWindow = 'authWindow';
@@ -100,44 +108,19 @@ function writeValue(path, value)
     });
 }
   
-
-fs.readdir('./', (err, files) => {
-  if (err) throw err;
-  else {
-   if (files.includes('profile.txt')) 
-    {
-      fs.readFile('./profile.txt', 'utf8', function(err, data){
-        if(err) { 
-          console.log('Cant read profile'); 
-          }else { 
-            console.log(data);
-          } 
-      });
-    }
-    else
-    {
-      authorization()
-    }
-    if (files.includes("minecraft_path.txt")) 
-      {
-        fs.readFile('./minecraft_path.txt', 'utf8', function(err, data){
-          if(err) { 
-            console.log('Cant read minecraft path'); 
-            }else { 
-              console.log(data);
-            } 
-        });
-      }
-      else 
-      {
-        var path = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share")
- 
-        writeValue('./minecraft_path.txt', path /*+ "/.dungeoncraft" */);
-      }
-  }
-});
-
-const ipcMain = require('electron').ipcMain;
+if (fs.existsSync("./profile.txt")){
+  fs.readFile('./profile.txt', 'utf8', function(err, data){
+    if(err) { 
+      console.log('Cant read profile'); 
+      }else { 
+        console.log(data);
+      } 
+  });
+}
+else
+{
+  authorization();
+}
 
 ipcMain.on('settings', (event, arg) => {
   let settingsWindow = 'settingsWindow';
@@ -148,10 +131,11 @@ ipcMain.on('changeName', (event, arg) => {
   authorization();
 });
 
-const launch = () => 
-{
-  
-};
+ipcMain.on('launch', (event, arg) => {
+  const launch = () => {
+
+  }
+});
 
 
 function giveMeFiles (dir, basedir, files){
@@ -169,31 +153,28 @@ function giveMeFiles (dir, basedir, files){
     return files;
   };
 
-
-
-
 function getUncommonElements(a, b) {
 
-  var res = []
+  var res = [];
 
   for (var x of a) {
-    if (!(b.toString().includes(x)))  {
-      res.push(x)
+    if (!(b.toString().includes(x)) && !b.toString().includes("saves") && !b.toString().includes("logs") && !b.toString().includes("crash-reports"))  {
+      res.push(x);
     }
   }
   
-  return res
+  return res;
 }
 
 function callback(err) {
   if (err) throw err;
 }
 
-var minecraft_path;
+var appdata_path = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share");
+var minecraft_path = appdata_path + "/.dungeoncraft/dungeoncraft";
+var java_path = appdata_path + "/.dungeoncraft/java";
 
-import { copyFile, constants } from 'fs';
-
-function copyDir(x, dest_path) 
+function createDir(x, dest_path) 
 {
   let basedir = "/";
 
@@ -210,51 +191,197 @@ function copyDir(x, dest_path)
   }
 };
 
-fs.stat("./minecraft_path.txt", function (error, stats) {
-  fs.open("./minecraft_path.txt", "r", function (error, fd) {
-      var buffer = new Buffer.alloc(stats.size);
-      fs.read(fd, buffer, 0, buffer.length,
-          null, function (error, bytesRead, buffer) {
-              minecraft_path = buffer.toString("utf8");
-              if (!fs.existsSync(minecraft_path  + "\\.dungeoncraft")){
-                fs.mkdirSync(minecraft_path  + "\\.dungeoncraft");
+function verifyFiles(src_path, dest_path, server_url){
+
+  fs.readFile(src_path, 'utf8', (err, filesOnServer) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    
+    
+    filesOnServer = filesOnServer.split(',');
+    let filesOnClient = giveMeFiles (dest_path, "/", '');
+
+    if (filesOnServer !== filesOnClient) 
+    {
+      let res = getUncommonElements(filesOnServer, filesOnClient);
+
+      console.log(res);
+
+      if (res.length !== 0) {
+        for (var x of res)
+          {
+            let y = x.split('/');
+            y.shift();
+            createDir(y, dest_path);
+  
+            if (y.length > 1) {
+              console.log(y);
+              y.pop();
+              console.log(y + "\t" + y.length);
+              if (y.length > 1) {
+                y = '/' + y.join('/');
               }
+              else { y = '/' + y; }
+            }
+            else { y = ''; }
+  
+            const dl = new DownloaderHelper(server_url + x, dest_path + y);
+  
+            console.log("Скачивание файла " + x);
+  
+            dl.on('end', () => {
+              });
+  
+            dl.on('error', (err) => console.log('Download Failed' + x, err));
+            dl.start().catch(err => {
+              console.error(err)
+              console.log('Download error' + x)
+            });
+          }
+      }
+    
+      /*
+      for (var x of res) {
+        let y = x.split('/');
+        y.shift();
+        copyDir(y, dest_path);
+        if (!fs.existsSync(dest_path + x)){
+          copyFile(src_path + x, dest_path + x, callback);
+          console.log(x + ' was copied');
+        }
+      }
+      */
+    };   
+  
+    let serverMods = [];
+    for (var x of filesOnServer) {
+      if (x.includes('mods')) { serverMods.push(x) }
+    }
 
-              let server_path = "D:\\Documents\\Github/LuciaRey.github.io";
-              let dest_path = minecraft_path + "\\test\\LuciaRey.github.io"
+    dest_path += "/mods";
 
-              let a = giveMeFiles (server_path, "/", '');
-              let b = giveMeFiles (dest_path, "/", '');
-
-              if (a !== b) 
-                {
-                  let res = getUncommonElements(a, b);
-
-                  for (var x of res) {
-                    let y = x.split('/');
-                    y.shift();
-                    copyDir(y, dest_path);
-                    if (!fs.existsSync(dest_path + x)){
-                      copyFile(server_path + x, dest_path + x, callback);
-                      console.log(x + ' was copied');
-                    }
-                  }
-                };         
-
-              server_path = "D:\\Documents\\Github/test/.dungeoncraft/mods";
-              dest_path = minecraft_path  + "/.dungeoncraft/mods"
-
-              a = giveMeFiles (server_path, '');
-              b = giveMeFiles (dest_path, '');
-              if (a != b){
-                let res = getUncommonElements(b, a);
-                for (var x of res) {
-                    let y = x.split('/');
-                    y.shift();
-                    fs.remove(dest_path + x, callback);
-                    console.log(x + ' was deleted');
-                }
-              }   
-        });
+    //a = giveMeFiles (src_path, '');
+    filesOnClient = giveMeFiles (dest_path, '');
+    if (serverMods != filesOnClient){
+      let res = getUncommonElements(filesOnClient, serverMods);
+      for (var x of res) {
+        let y = x.split('/');
+        y.shift();
+        fs.unlink(dest_path + "/" + x, (err) => {
+          if (err) throw err;
+        }); 
+        console.log(x + ' was deleted');
+      }
+    }
   });
+}
+
+async function unzipFiles(dest_path)
+{
+  try {
+    await extract(dest_path + "/jdk-17_windows-x64_bin.zip", { dir: dest_path })
+    console.log('Extraction jdk-17_windows-x64_bin.zip complete');
+    fs.unlinkSync(dest_path + "/jdk-17_windows-x64_bin.zip");
+  } catch (err) {
+    // handle any errors
+  }
+
+}
+
+if (!fs.existsSync(appdata_path + "/.dungeoncraft")) {
+  fs.mkdirSync(appdata_path + "/.dungeoncraft");
+}
+
+if (!fs.existsSync(minecraft_path)) {
+  fs.mkdirSync(minecraft_path);
+}
+
+if (!fs.existsSync(java_path)) {
+  fs.mkdirSync(java_path);
+}
+
+if (!fs.existsSync(java_path + "/jdk-17.0.11")) {
+  if(!fs.existsSync(java_path + "/jdk-17_windows-x64_bin.zip")) {
+    const dl = new DownloaderHelper("https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.zip", java_path);
+  
+    dl.on('end', () => {
+      console.log('Download jdk-17_windows-x64_bin.zip complete');
+      unzipFiles(java_path);
+  
+    });
+  
+    dl.on('error', (err) => console.log('Download jdk-17_windows-x64_bin.zip Failed' , err));
+    dl.start().catch(err => console.error(err));
+  } else {
+    unzipFiles(java_path);
+  }
+}
+
+
+
+/*
+let src_path = "D:/Documents/GitHub/LuciaRey.github.io/dungeoncraft";
+
+let files = giveMeFiles(src_path, '/');
+
+let serverfiles = [];
+
+for (var x of files)
+  {
+    if (x.includes('profile.json') || x.includes('datapacks') || x.includes('mods')) 
+      {
+        serverfiles.push(x);
+      }
+  }
+
+fs.writeFileSync("./server.txt", files);
+*/
+
+let server_url = "https://luciarey.github.io/dungeoncraft";
+
+if (fs.existsSync(minecraft_path + "/server.txt")) { fs.unlinkSync(minecraft_path + "/server.txt"); }
+
+const dl = new DownloaderHelper(server_url + "/server.txt", minecraft_path);
+
+dl.on('end', () => {
+  
+  let servertxt_path = minecraft_path + '/server.txt';
+  verifyFiles(servertxt_path, minecraft_path, server_url);
+
 });
+
+dl.on('error', (err) => console.log('Download server.txt Failed' , err));
+dl.start().catch(err => console.error(err));
+
+
+
+/*
+let server_url = 'https://luciarey.github.io/server.zip';
+let dest_path = minecraft_path + "/temp";
+
+if (!fs.existsSync(dest_path)) {
+  fs.mkdirSync(dest_path);
+  fs.mkdirSync(dest_path + "/decompressed");
+  fs.mkdirSync(dest_path + "/decompressed/mods");
+}
+
+if(!fs.existsSync(dest_path + "/server.zip")){
+  const dl = new DownloaderHelper(server_url, dest_path);
+
+  dl.on('end', () => {
+  
+    unzipFiles(dest_path, minecraft_path);
+
+  });
+
+  dl.on('error', (err) => console.log('Download Failed', err));
+  dl.start().catch(err => console.error(err));
+}
+
+
+
+
+https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.zip  <-- java 17 installation
+*/

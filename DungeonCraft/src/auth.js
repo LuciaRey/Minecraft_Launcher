@@ -1,12 +1,13 @@
 const fs = require('fs');
+const ipc = require('electron').ipcRenderer;
 
 window.onload = document.getElementById("name").onkeyup = function(e) 
 {   
     if (e.key !== 'Enter'){
-        getValue()
+        getValue();
+        writeValue();
     }
     else{
-        writeValue()
         closeWindow()
     }
 };
@@ -25,7 +26,6 @@ function writeValue(){
             console.log('File was created')
         }
     });
-    closeWindow()
 }
 
 function closeWindow()

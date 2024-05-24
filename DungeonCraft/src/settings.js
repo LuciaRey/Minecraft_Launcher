@@ -19,12 +19,8 @@ function changeName() {
 
 window.onload = document.getElementById("javaargs").onkeyup = function(e) 
 {   
-    if (e.key !== 'Enter'){
-        getValue()
-    }
-    else{
-        writeValue()
-    }
+    getValue();
+    writeValue();
 };
 
 let javaargs = '';
@@ -38,13 +34,7 @@ function writeValue(){
         if (err) {
             console.log('Cant write to file');
         } else {
-            console.log('File was created')
+            console.log('File was changed');
         }
     });
-    closeWindow()
-}
-
-function closeWindow()
-{
-    window.close()
 }
