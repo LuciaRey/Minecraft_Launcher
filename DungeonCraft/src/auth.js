@@ -8,7 +8,7 @@ window.onload = document.getElementById("name").onkeyup = function(e)
         writeValue();
     }
     else{
-        closeWindow()
+        closeWindow();
     }
 };
 
@@ -23,12 +23,14 @@ function writeValue(){
         if (err) {
             console.log('Cant write to file');
         } else {
-            console.log('File was created')
+            console.log('File was created');
         }
     });
 }
 
 function closeWindow()
 {
-    window.close()
+    if (nickname.value !== ''){
+        ipc.send('close_window', 3)
+    }
 }

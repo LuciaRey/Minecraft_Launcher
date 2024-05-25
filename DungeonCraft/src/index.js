@@ -5,6 +5,18 @@ const extract = require('extract-zip');
 const ipcMain = require('electron').ipcMain;
 const { DownloaderHelper } = require('node-downloader-helper');
 
+var appdata_path = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share");
+var minecraft_path = appdata_path + "/.dungeoncraft/dungeoncraft";
+var base_path = appdata_path + "/.dungeoncraft/";
+var java_path = base_path + "/meta/java";
+
+let meta_is_ready = false;
+let java_is_ready = false;
+let files_are_ready = false;
+let game_is_ready = false;
+
+
+
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -20,7 +32,9 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 710,
     height: 400,
-    titleBarStyle: 'hidden',
+    frame: false,
+    //resizable: false,
+    enableRemoteModule: true,
     webPreferences: {
       nodeIntegration: true,
     }
@@ -30,7 +44,7 @@ const createWindow = () => {
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
@@ -62,6 +76,7 @@ app.on('activate', () => {
   }
 });
 
+
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
@@ -72,7 +87,9 @@ const createNewWindow = (windowName, windWidth, windHeight, url) =>
       modal: true,
       width: windWidth,
       height: windHeight,
-      titleBarStyle: 'hidden',
+      frame: false,
+      //resizable: false,
+      enableRemoteModule: true,
       webPreferences: {
         nodeIntegration: true
       }
@@ -82,27 +99,46 @@ const createNewWindow = (windowName, windWidth, windHeight, url) =>
   
     //windowName.webContents.openDevTools();
   
-    windowName.show()
+    windowName.hide();
   };
+
+const createWindows = () =>{
+    let settingsWindow = 'settingsWindow';
+
+    createNewWindow(settingsWindow, 710, 400, `file://${__dirname}/settings.html`);
+
+    let authWindow = 'authWindow';
+
+    createNewWindow(authWindow, 400, 300, `file://${__dirname}/auth.html`);
+}
+
+app.on('ready', createWindows);
+
+
+function createLauncherDir() {
+  if (!fs.existsSync(appdata_path + "/.dungeoncraft")) {
+    fs.mkdirSync(appdata_path + "/.dungeoncraft");
+  }
+  
+  if (!fs.existsSync(minecraft_path)) {
+    fs.mkdirSync(minecraft_path);
+  }
+  
+  if (!fs.existsSync(base_path + "/meta")) {
+    fs.mkdirSync(base_path + "/meta");
+  }
+  
+  if (!fs.existsSync(java_path)) {
+    fs.mkdirSync(java_path);
+  }  
+}
+
+createLauncherDir();
 
 const authorization = () =>
   {
-    let authWindow = 'authWindow';
-
-    createNewWindow(authWindow, 400, 300, `file://${__dirname}/auth.html`)
+    BrowserWindow.fromId(3).show();
   }
-
-function writeValue(path, value)
-{
-  fs.writeFile(path, value, err => {
-      if (err) {
-        console.log('Cant write to file ' + path);
-        throw err;
-      } else {
-        console.log('File was created')
-      }
-    });
-}
   
 if (fs.existsSync("./profile.txt")){
   fs.readFile('./profile.txt', 'utf8', function(err, data){
@@ -118,14 +154,28 @@ else
   authorization();
 }
 
+function handleTitleBarActions(args) {
+
+  if (args === 3)
+    BrowserWindow.fromId(2).reload();
+  if (args === 1)
+      app.quit();
+  else
+    BrowserWindow.fromId(args).hide();
+}
+
 ipcMain.on('settings', (event, arg) => {
-  let settingsWindow = 'settingsWindow';
-  mainWindow.onload = createNewWindow(settingsWindow, 710, 403, `file://${__dirname}/settings.html`);
+  BrowserWindow.fromId(2).show()
 });
 
 ipcMain.on('changeName', (event, arg) => {
   authorization();
 });
+
+ipcMain.on('close_window', (event, args) => {
+  handleTitleBarActions(args);
+});
+
 
 function giveMeFiles (dir, basedir, files){
   files = files || [];
@@ -147,21 +197,13 @@ function getUncommonElements(a, b) {
   var res = [];
 
   for (var x of a) {
-    if (!(b.toString().includes(x)) && (x.toString().includes("mods") || x.toString().includes("profile.json")))  {
+    //if (!(b.toString().includes(x)) && (x.toString().includes("mods") || x.toString().includes("profile.json") || x.toString().includes("meta")) && !x.toString().includes('versions')) {
+    if (!(b.toString().includes(x))) {
       res.push(x);
     }
   }
-  
   return res;
 }
-
-function callback(err) {
-  if (err) throw err;
-}
-
-var appdata_path = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share");
-var minecraft_path = appdata_path + "/.dungeoncraft/dungeoncraft";
-var java_path = appdata_path + "/.dungeoncraft/java";
 
 function createDir(x, dest_path) 
 {
@@ -180,6 +222,14 @@ function createDir(x, dest_path)
   }
 };
 
+function sleep(milliseconds) {       
+  const date = Date.now();        
+  let currentDate = null;       
+  do {               
+     currentDate = Date.now();      
+  } while (currentDate - date < milliseconds); 
+}  
+
 function verifyFiles(src_path, dest_path, server_url){
 
   fs.readFile(src_path, 'utf8', (err, filesOnServer) => {
@@ -187,14 +237,13 @@ function verifyFiles(src_path, dest_path, server_url){
       console.error(err);
       return;
     }
-    
-    
     filesOnServer = filesOnServer.split(',');
     let filesOnClient = giveMeFiles (dest_path, "/", '');
 
     if (filesOnServer !== filesOnClient) 
     {
       let res = getUncommonElements(filesOnServer, filesOnClient);
+      let downloaded_files = [];
 
       if (res.length !== 0) {
         for (var x of res)
@@ -204,32 +253,42 @@ function verifyFiles(src_path, dest_path, server_url){
             createDir(y, dest_path);
   
             if (y.length > 1) {
-              console.log(y);
               y.pop();
-              console.log(y + "\t" + y.length);
               if (y.length > 1) {
                 y = '/' + y.join('/');
               }
               else { y = '/' + y; }
             }
             else { y = ''; }
+
+            //sleep(5);
   
             const dl = new DownloaderHelper(server_url + x, dest_path + y);
   
-            console.log("Скачивание файла " + x);
+            console.log("Downloading file " + x);
   
             dl.on('end', () => {
-              });
+              //console.log("Downloaded file ");
+              downloaded_files.push(x);
+              console.log('Downloaded file ' + downloaded_files.length + " of " + res.length);
+              if (downloaded_files.length === res.length) {
+                  console.log('Files downloading complete!');
+                  console.log('files are ok');
+                  files_are_ready = true;
+              }
+            });
   
-            dl.on('error', (err) => console.log('Download Failed' + x, err));
+            dl.on('error', (err) => console.log('Download Failed' + server_url+x, err));
             dl.start().catch(err => {
               console.error(err)
-              console.log('Download error' + x)
+              console.log('Download error' + server_url+x)
             });
           }
-      }
-    };   
-  
+      } else
+        console.log('All files are ok.');
+        files_are_ready = true;
+    } 
+
     let serverMods = [];
     for (var x of filesOnServer) {
       if (x.includes('mods')) { serverMods.push(x) }
@@ -249,55 +308,36 @@ function verifyFiles(src_path, dest_path, server_url){
         }); 
         console.log(x + ' was deleted');
       }
-    }
+    } else
+    console.log('All mods are ok');
   });
 }
 
-async function unzipFiles(dest_path)
+async function unzipFiles(dest_path, fileName)
 {
   try {
-    await extract(dest_path + "/jdk-17_windows-x64_bin.zip", { dir: dest_path })
-    console.log('Extraction jdk-17_windows-x64_bin.zip complete');
-    fs.unlinkSync(dest_path + "/jdk-17_windows-x64_bin.zip");
+    await extract(dest_path + "/" + fileName, { dir: dest_path })
+    console.log('Extraction ' + fileName + ' complete');
+    if (fileName.includes('jdk')) {
+      console.log('java is ok');
+      java_is_ready = true;
+    } else if (fileName.includes('meta')) {
+      console.log('meta is ok');
+      meta_is_ready = true;
+    }
+    fs.unlinkSync(dest_path + "/" + fileName);
   } catch (err) {
     // handle any errors
   }
 
 }
 
-if (!fs.existsSync(appdata_path + "/.dungeoncraft")) {
-  fs.mkdirSync(appdata_path + "/.dungeoncraft");
-}
-
-if (!fs.existsSync(minecraft_path)) {
-  fs.mkdirSync(minecraft_path);
-}
-
-if (!fs.existsSync(java_path)) {
-  fs.mkdirSync(java_path);
-}
-
-if (!fs.existsSync(java_path + "/jdk-17.0.11")) {
-  if(!fs.existsSync(java_path + "/jdk-17_windows-x64_bin.zip")) {
-    const dl = new DownloaderHelper("https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.zip", java_path);
-  
-    dl.on('end', () => {
-      console.log('Download jdk-17_windows-x64_bin.zip complete');
-      unzipFiles(java_path);
-  
-    });
-  
-    dl.on('error', (err) => console.log('Download jdk-17_windows-x64_bin.zip Failed' , err));
-    dl.start().catch(err => console.error(err));
-  } else {
-    unzipFiles(java_path);
-  }
-}
-
+//Создание server.txt
 /*
-Создание server.txt
+let serversrc_path = "D:/Documents/GitHub/LuciaRey.github.io/dungeoncraft/dungeoncraft";
 
-let serversrc_path = "D:/Documents/GitHub/LuciaRey.github.io/dungeoncraft";
+if (fs.existsSync('D:/Documents/GitHub/LuciaRey.github.io/dungeoncraft/dungeoncraft/server.txt'))
+  fs.unlinkSync('D:/Documents/GitHub/LuciaRey.github.io/dungeoncraft/dungeoncraft/server.txt');
 
 let files = giveMeFiles(serversrc_path, '/');
 
@@ -305,18 +345,70 @@ let serverfiles = [];
 
 for (var x of files)
   {
-    if (x.includes('profile.json') || x.includes('datapacks') || x.includes('mods')) 
+    if ((x.includes('profile.json') || x.includes('datapacks') || x.includes('mods'))) 
       {
         serverfiles.push(x);
       }
   }
-
-fs.writeFileSync("D:/Documents/GitHub/LuciaRey.github.io/dungeoncraft/server.txt", files);
+fs.writeFileSync("D:/Documents/GitHub/LuciaRey.github.io/dungeoncraft/dungeoncraft/server.txt", serverfiles);
+console.log('server.txt was created in D:/Documents/GitHub/LuciaRey.github.io/dungeoncraft/dungeoncraft/');
 */
 
+
+function verifyJava(){
+  if (!fs.existsSync(java_path + "/jdk-17.0.11")) {
+    if(!fs.existsSync(java_path + "/jdk-17_windows-x64_bin.zip")) {
+      console.log('java is missing | downloading java');
+  
+      const dl = new DownloaderHelper("https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.zip", java_path);
+    
+      dl.on('end', () => {
+        console.log('Download jdk-17_windows-x64_bin.zip complete');
+        unzipFiles(java_path, 'jdk-17_windows-x64_bin.zip');
+      });
+    
+      dl.on('error', (err) => console.log('Download jdk-17_windows-x64_bin.zip Failed' , err));
+      dl.start().catch(err => console.error(err));
+    } else {
+      unzipFiles(java_path, 'jdk-17_windows-x64_bin.zip');
+    }
+  } else {
+    console.log('java is ok');
+    java_is_ready = true;
+  }
+}
+
+function verifyMeta() {
+  if (!fs.existsSync(base_path + "/meta")) {
+    if(!fs.existsSync(base_path + "/meta/meta.zip")) {
+      console.log('meta is missing | downloading meta');
+  
+      const dl = new DownloaderHelper("https://luciarey.github.io/dungeoncraft/meta/meta.zip", base_path + "/meta");
+    
+      dl.on('end', () => {
+        console.log('Download meta.zip complete');
+        unzipFiles(base_path + "/meta");
+      });
+    
+      dl.on('error', (err) => console.log('Download meta.zip Failed' , err));
+      dl.start().catch(err => console.error(err));
+    } else {
+      unzipFiles(base_path + "/meta", 'meta.zip');
+    }
+  } else {
+    console.log('meta is ok');
+    meta_is_ready = true;
+  }
+}
+
+
 ipcMain.on('launch', (event, arg) => {
-  const launch = () => {
-    let server_url = "https://luciarey.github.io/dungeoncraft";
+    console.log('Launching minecraft');
+
+    verifyJava();
+    verifyMeta();
+
+    let server_url = "https://luciarey.github.io/dungeoncraft/dungeoncraft";
 
     if (fs.existsSync(minecraft_path + "/server.txt")) { fs.unlinkSync(minecraft_path + "/server.txt"); }
 
@@ -330,9 +422,10 @@ ipcMain.on('launch', (event, arg) => {
 
     dl.on('error', (err) => console.log('Download server.txt Failed' , err));
     dl.start().catch(err => console.error(err));
-  }
 });
 
 
 //  https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.zip  <-- java 17 installation
+
+//  https://luciarey.github.io/dungeoncraft/meta/versions/1.19.2-1.19.2-43.3.5/1.19.2-1.19.2-43.3.5.json
 

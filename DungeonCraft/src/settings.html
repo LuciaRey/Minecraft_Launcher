@@ -6,7 +6,22 @@
     <title>DungeonCraft</title>
   </head>
   <body>
-    <div class="nickname">
+    <header id="titlebar">
+      <div id="drag-region">
+        <div id="window-title">
+          <!-- <img id="logo" src="./images/logo.png" alt="my logo"> -->
+        </div>
+        <div id="window-controls">
+          <div class="button window-hover-close" id="close-button">
+            <img class="icon" id="close" alt="close"
+              srcset="./images/close-w-10.png"
+              draggable="false" />
+          </div>
+        </div>
+      </div>
+    </header>
+    <div id="main">
+      <div class="settings">
         <fieldset>
             <legend>Изменить ник</legend>
             <label for="name">
@@ -22,7 +37,8 @@
                 </label>
             </fieldset>
         </div>
+      </div>
+      <script src="./settings.js"></script>
     </div>
-    <script src="./settings.js"></script>
   </body>
 </html>

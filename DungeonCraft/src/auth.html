@@ -6,11 +6,11 @@
     <title>DungeonCraft</title>
   </head>
   <body>
-    <div class="nickname">
+    <div class="settings">
         <fieldset>
             <legend>Введите ник</legend>
             <label for="name">
-                <input required type="text" id="name" placeholder="♂Leather Man♂">
+                <input required type="text" id="name" minlength="2" maxlength="40" placeholder="♂Leather Man♂">
             </label>
             <p><button id ="authButton" onclick="closeWindow()">Войти</button></p>
         </fieldset>

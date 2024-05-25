@@ -38,3 +38,7 @@ function writeValue(){
         }
     });
 }
+
+document.getElementById('close-button').addEventListener("click", event => {
+    ipc.send('close_window', 2)
+});

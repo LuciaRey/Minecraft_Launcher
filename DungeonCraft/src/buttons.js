@@ -5,6 +5,11 @@ window.addEventListener('load', function () {
     preloader.style.display = 'none';
   });
 
+document.getElementById('close-button').addEventListener("click", event => {
+    ipc.send('close_window', 1)
+});
+
+
 function settings () {
     ipc.send('settings', '');
 }
