@@ -300,8 +300,8 @@ function verifyFiles(src_path, dest_path, server_url){
               console.log('Downloaded file ' + downloaded_files.length + " of " + res.length);
               if (downloaded_files.length === res.length) {
                   console.log('Files downloading complete!');
-                  console.log('files are ok');
                   files_are_ready = true;
+                  console.log('files are ok');
               }
             });
   
@@ -312,8 +312,10 @@ function verifyFiles(src_path, dest_path, server_url){
             });
           }
       } else
+      {
         console.log('All files are ok.');
         files_are_ready = true;
+      }
     } 
 
     let serverMods = [];
