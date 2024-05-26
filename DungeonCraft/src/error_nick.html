@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="./style.css">
+    <meta charset="utf-8">
+    <title>DungeonCraft</title>
+  </head>
+  <body>
+    <header id="titlebar">
+      <div id="drag-region">
+        <div id="window-title">
+          <!-- <img id="logo" src="./images/logo.png" alt="my logo"> -->
+        </div>
+        <div id="window-controls">
+          <div class="button window-hover-close" id="close-button">
+            <img class="icon" id="close" alt="close"
+              srcset="./images/close-w-10.png"
+              draggable="false" />
+          </div>
+        </div>
+      </div>
+    </header>
+    <div id="preloader" class="preloader"></div>
+    <script>
+      window.onload = function () {
+        document.body.classList.add('loaded_hiding');
+        window.setTimeout(function () {
+          document.body.classList.add('loaded');
+          document.body.classList.remove('loaded_hiding');
+        }, 500);
+      }
+    </script>
+    <div id="main">
+        <div class="error">
+            <a href="https://ely.by">Аккаунт с данным ником не существует<br/><br/>
+              Зарегистрируйтесь на сайте https://ely.by</a>
+        </div>
+    </div>
+    <script>
+        const ipc = require('electron').ipcRenderer;
+        document.getElementById('close-button').addEventListener("click", event => {
+            ipc.send('close_window', 4);
+        });
+    </script>
+  </body>
+</html>

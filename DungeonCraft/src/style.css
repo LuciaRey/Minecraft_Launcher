@@ -13,7 +13,17 @@
     background-repeat:no-repeat; 
     background-color: #141625;
     background-position: center;
- }
+}
+
+
+.loaded_hiding .preloader {
+    transition: 0.3s opacity;
+    opacity: 0;
+}
+  
+.loaded .preloader {
+    display: none;
+}
 
 body {
     background-color: rgb(34, 34, 56);
@@ -119,6 +129,16 @@ input {
     border-radius: 5px;
 }
 
+.authfieldset fieldset{
+    width: 260px;
+    margin: 90px auto;
+    padding: 20px 15px 0;
+    text-align: center;
+
+    border: 1px solid #7b7b7b;
+    border-radius: 5px;
+}
+
 .settings input {
     margin: 0 0 10px;
 }
@@ -192,4 +212,10 @@ button:hover {
 
 p {
     margin: 0 0 10px;
+}
+
+.error {
+    margin: 90px auto;
+    text-align: center;
+    text-decoration: none;
 }

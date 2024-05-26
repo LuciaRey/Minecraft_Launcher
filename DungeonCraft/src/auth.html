@@ -6,13 +6,26 @@
     <title>DungeonCraft</title>
   </head>
   <body>
-    <div class="settings">
+    <div id="preloader" class="preloader"></div>
+    <script>
+      window.onload = function () {
+        document.body.classList.add('loaded_hiding');
+        window.setTimeout(function () {
+          document.body.classList.add('loaded');
+          document.body.classList.remove('loaded_hiding');
+        }, 500);
+      }
+    </script>
+    <div class="authfieldset">
         <fieldset>
-            <legend>Введите ник</legend>
-            <label for="name">
+            <legend>Введите данные</legend>
+            <label for="name">Введите ник
                 <input required type="text" id="name" minlength="2" maxlength="40" placeholder="♂Leather Man♂">
             </label>
-            <p><button id ="authButton" onclick="closeWindow()">Войти</button></p>
+            <label for="password">Введите пароль
+              <input required type="password" id="password">
+          </label>
+            <p><button id ="authButton" onclick="auth()">Войти</button></p>
         </fieldset>
     </div>
     <script src="./auth.js"></script>

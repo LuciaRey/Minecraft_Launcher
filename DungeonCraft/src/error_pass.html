@@ -6,16 +6,6 @@
     <title>DungeonCraft</title>
   </head>
   <body>
-    <div id="preloader" class="preloader"></div>
-    <script>
-      window.onload = function () {
-        document.body.classList.add('loaded_hiding');
-        window.setTimeout(function () {
-          document.body.classList.add('loaded');
-          document.body.classList.remove('loaded_hiding');
-        }, 500);
-      }
-    </script>
     <header id="titlebar">
       <div id="drag-region">
         <div id="window-title">
@@ -30,11 +20,26 @@
         </div>
       </div>
     </header>
+    <div id="preloader" class="preloader"></div>
+    <script>
+      window.onload = function () {
+        document.body.classList.add('loaded_hiding');
+        window.setTimeout(function () {
+          document.body.classList.add('loaded');
+          document.body.classList.remove('loaded_hiding');
+        }, 500);
+      }
+    </script>
     <div id="main">
-      <img class="image" src="./images/DungeonCraft.png" />
-      <div class="play"><button id="playButton" onclick="launch()">Играть</button></div>
-      <button class="settingsIndexButton" id="settingsButton" onclick="settings()"></button>
-      <script src="./buttons.js"></script>
+        <div class="error">
+            <h4>Введен неверный пароль</h4>
+        </div>
     </div>
+    <script>
+        const ipc = require('electron').ipcRenderer;
+        document.getElementById('close-button').addEventListener("click", event => {
+            ipc.send('close_window', 5);
+        });
+    </script>
   </body>
 </html>

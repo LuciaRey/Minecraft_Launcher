@@ -3,6 +3,7 @@ import { app, BrowserWindow } from 'electron';
 const fs = require('fs');
 const extract = require('extract-zip');
 const ipcMain = require('electron').ipcMain;
+const { nativeTheme } = require('electron')
 const { DownloaderHelper } = require('node-downloader-helper');
 
 var appdata_path = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share");
@@ -15,7 +16,17 @@ let java_is_ready = false;
 let files_are_ready = false;
 let game_is_ready = false;
 
+let path = (process.env.PATH).split(';');
+let current_java_path;
+for (var x of path) {
+  if (x.includes('Java')) {
+    current_java_path = x;
+  }
+}
 
+nativeTheme.themeSource = 'dark';
+
+console.log(current_java_path);
 
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -97,7 +108,7 @@ const createNewWindow = (windowName, windWidth, windHeight, url) =>
   
     windowName.loadURL(url);
   
-    //windowName.webContents.openDevTools();
+    windowName.webContents.openDevTools();
   
     windowName.hide();
   };
@@ -110,6 +121,14 @@ const createWindows = () =>{
     let authWindow = 'authWindow';
 
     createNewWindow(authWindow, 400, 300, `file://${__dirname}/auth.html`);
+
+    let errorNickWindow = 'errorNickWindow';
+
+    createNewWindow(errorNickWindow, 400, 300, `file://${__dirname}/error_nick.html`);
+
+    let errorPassWindow = 'errorPassWindow';
+
+    createNewWindow(errorPassWindow, 400, 300, `file://${__dirname}/error_pass.html`);
 }
 
 app.on('ready', createWindows);
@@ -122,6 +141,10 @@ function createLauncherDir() {
   
   if (!fs.existsSync(minecraft_path)) {
     fs.mkdirSync(minecraft_path);
+  }
+
+  if (!fs.existsSync(minecraft_path + "/natives")) {
+    fs.mkdirSync(minecraft_path + "/natives");
   }
   
   if (!fs.existsSync(base_path + "/meta")) {
@@ -140,12 +163,14 @@ const authorization = () =>
     BrowserWindow.fromId(3).show();
   }
   
-if (fs.existsSync("./profile.txt")){
-  fs.readFile('./profile.txt', 'utf8', function(err, data){
+if (fs.existsSync("./launcher_data")){
+  fs.readFile('./launcher_data', 'utf8', function(err, buffer){
     if(err) { 
       console.log('Cant read profile'); 
       }else { 
-        //console.log(data);
+        if (buffer === '') {
+          authorization();
+        } 
       } 
   });
 }
@@ -158,10 +183,18 @@ function handleTitleBarActions(args) {
 
   if (args === 3)
     BrowserWindow.fromId(2).reload();
+
   if (args === 1)
       app.quit();
   else
     BrowserWindow.fromId(args).hide();
+}
+
+function errorActions(args) {
+  if (args === 'ник') {
+    BrowserWindow.fromId(4).show();
+  } else
+    BrowserWindow.fromId(5).show();
 }
 
 ipcMain.on('settings', (event, arg) => {
@@ -170,6 +203,10 @@ ipcMain.on('settings', (event, arg) => {
 
 ipcMain.on('changeName', (event, arg) => {
   authorization();
+});
+
+ipcMain.on('error', (event, arg) => {
+  errorActions(arg)
 });
 
 ipcMain.on('close_window', (event, args) => {
@@ -197,7 +234,6 @@ function getUncommonElements(a, b) {
   var res = [];
 
   for (var x of a) {
-    //if (!(b.toString().includes(x)) && (x.toString().includes("mods") || x.toString().includes("profile.json") || x.toString().includes("meta")) && !x.toString().includes('versions')) {
     if (!(b.toString().includes(x))) {
       res.push(x);
     }
@@ -221,14 +257,6 @@ function createDir(x, dest_path)
       }
   }
 };
-
-function sleep(milliseconds) {       
-  const date = Date.now();        
-  let currentDate = null;       
-  do {               
-     currentDate = Date.now();      
-  } while (currentDate - date < milliseconds); 
-}  
 
 function verifyFiles(src_path, dest_path, server_url){
 
@@ -268,7 +296,6 @@ function verifyFiles(src_path, dest_path, server_url){
             console.log("Downloading file " + x);
   
             dl.on('end', () => {
-              //console.log("Downloaded file ");
               downloaded_files.push(x);
               console.log('Downloaded file ' + downloaded_files.length + " of " + res.length);
               if (downloaded_files.length === res.length) {
@@ -296,7 +323,6 @@ function verifyFiles(src_path, dest_path, server_url){
 
     dest_path += "/mods";
 
-    //a = giveMeFiles (src_path, '');
     filesOnClient = giveMeFiles (dest_path, '');
     if (serverMods != filesOnClient){
       let res = getUncommonElements(filesOnClient, serverMods);
@@ -345,7 +371,7 @@ let serverfiles = [];
 
 for (var x of files)
   {
-    if ((x.includes('profile.json') || x.includes('datapacks') || x.includes('mods'))) 
+    if ((x.includes('profile.json') || x.includes('datapacks') || x.includes('mods') || x.includes('dungeoncraft'))) 
       {
         serverfiles.push(x);
       }
@@ -401,6 +427,19 @@ function verifyMeta() {
   }
 }
 
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+async function isGameReady() {
+  while (!game_is_ready) {
+    if (java_is_ready && meta_is_ready && files_are_ready) {
+      console.log('launching game');
+      //Запускаю игру... Ну типа
+      game_is_ready = true;
+    }
+    await sleep(2000);
+  }
+}
+
 
 ipcMain.on('launch', (event, arg) => {
     console.log('Launching minecraft');
@@ -422,10 +461,9 @@ ipcMain.on('launch', (event, arg) => {
 
     dl.on('error', (err) => console.log('Download server.txt Failed' , err));
     dl.start().catch(err => console.error(err));
+
+    isGameReady();
 });
 
 
 //  https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.zip  <-- java 17 installation
-
-//  https://luciarey.github.io/dungeoncraft/meta/versions/1.19.2-1.19.2-43.3.5/1.19.2-1.19.2-43.3.5.json
-
