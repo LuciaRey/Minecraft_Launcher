@@ -117,6 +117,10 @@ const createWindows = () =>{
     let errorPassWindow = 'errorPassWindow';
 
     createNewWindow(errorPassWindow, 400, 300, `file://${__dirname}/error_pass.html`);
+
+    let loadingWindow = 'loadingWindow';
+
+    createNewWindow(loadingWindow, 710, 400, `file://${__dirname}/loading.html`);
 }
 
 app.on('ready', createWindows);
@@ -436,6 +440,7 @@ async function isGameReady() {
 
 
 ipcMain.on('launch', (event, arg) => {
+    BrowserWindow.fromId(6).show();
     console.log('Launching minecraft');
 
     verifyJava();
