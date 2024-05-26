@@ -16,18 +16,7 @@ let java_is_ready = false;
 let files_are_ready = false;
 let game_is_ready = false;
 
-let path = (process.env.PATH).split(';');
-let current_java_path;
-for (var x of path) {
-  if (x.includes('Java')) {
-    current_java_path = x;
-  }
-}
-
 nativeTheme.themeSource = 'dark';
-
-console.log(current_java_path);
-
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -86,7 +75,6 @@ app.on('activate', () => {
     createWindow();
   }
 });
-
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
@@ -163,21 +151,25 @@ const authorization = () =>
     BrowserWindow.fromId(3).show();
   }
   
-if (fs.existsSync("./launcher_data")){
-  fs.readFile('./launcher_data', 'utf8', function(err, buffer){
-    if(err) { 
-      console.log('Cant read profile'); 
-      }else { 
-        if (buffer === '') {
-          authorization();
+const isAuthorized = () => {
+  if (fs.existsSync("./launcher_data")){
+    fs.readFile('./launcher_data', 'utf8', function(err, buffer){
+      if(err) { 
+        console.log('Cant read profile'); 
+        }else { 
+          if (buffer === '') {
+            authorization();
+          } 
         } 
-      } 
-  });
+    });
+  }
+  else
+  {
+    authorization();
+  }  
 }
-else
-{
-  authorization();
-}
+
+app.on('ready', isAuthorized);
 
 function handleTitleBarActions(args) {
 
@@ -212,7 +204,6 @@ ipcMain.on('error', (event, arg) => {
 ipcMain.on('close_window', (event, args) => {
   handleTitleBarActions(args);
 });
-
 
 function giveMeFiles (dir, basedir, files){
   files = files || [];
@@ -313,7 +304,7 @@ function verifyFiles(src_path, dest_path, server_url){
           }
       } else
       {
-        console.log('All files are ok.');
+        console.log('files are ok');
         files_are_ready = true;
       }
     } 
@@ -337,13 +328,14 @@ function verifyFiles(src_path, dest_path, server_url){
         console.log(x + ' was deleted');
       }
     } else
-    console.log('All mods are ok');
+    console.log('mods are ok');
   });
 }
 
 async function unzipFiles(dest_path, fileName)
 {
   try {
+    console.log('Extracting ' + fileName);
     await extract(dest_path + "/" + fileName, { dir: dest_path })
     console.log('Extraction ' + fileName + ' complete');
     if (fileName.includes('jdk')) {
@@ -407,15 +399,15 @@ function verifyJava(){
 }
 
 function verifyMeta() {
-  if (!fs.existsSync(base_path + "/meta")) {
+  if (!fs.existsSync(base_path + "/meta/assets") || !fs.existsSync(base_path + "/meta/libraries")) {
     if(!fs.existsSync(base_path + "/meta/meta.zip")) {
       console.log('meta is missing | downloading meta');
   
-      const dl = new DownloaderHelper("https://luciarey.github.io/dungeoncraft/meta/meta.zip", base_path + "/meta");
+      const dl = new DownloaderHelper("https://drive.usercontent.google.com/download?id=13ocAxDoZ1jgEioVG9w8hOoDVwjpyrSB_&confirm=t&uuid=48907295-b2bc-4eb7-9636-74f617e16fc7&at=APZUnTWStq7EHkiEobQ-6swQRsSv%3A1716762136742", base_path + "/meta");
     
       dl.on('end', () => {
         console.log('Download meta.zip complete');
-        unzipFiles(base_path + "/meta");
+        unzipFiles(base_path + "/meta", "meta.zip");
       });
     
       dl.on('error', (err) => console.log('Download meta.zip Failed' , err));
