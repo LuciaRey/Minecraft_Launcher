@@ -502,193 +502,193 @@ function launchingGame() {
             "-XX:+UnlockExperimentalVMOptions !-XX:+UseZGC !-XX:-ZUncommit !-XX:ZCollectionInterval=5 !-XX:ZAllocationSpikeTolerance=2.0 !-XX:+AlwaysPreTouch !-XX:+ParallelRefProcEnabled !-XX:+DisableExplicitGC !" +
             java_args +
             " !-Dfile.encoding=UTF-8 " +
-            '!-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump !"-Djava.library.path=' +
+            "!-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump !-Djava.library.path=" +
             minecraft_path +
-            '/natives" !-Dminecraft.launcher.brand=dungeoncraft !-Dminecraft.launcher.version=1.2.3-j !-cp "' +
+            "/natives !-Dminecraft.launcher.brand=dungeoncraft !-Dminecraft.launcher.version=1.2.3-j !-cp " +
             base_path +
-            "meta/libraries/cpw/mods/securejarhandler/2.1.4/securejarhandler-2.1.4.jar;" +
+            "meta/libraries/org/lwjgl/lwjgl/3.3.1/lwjgl-3.3.1.jar;" +
             base_path +
-            "meta/libraries/org/ow2/asm/asm/9.7/asm-9.7.jar;" +
+            "meta/libraries/org/apache/commons/commons-compress/1.21/commons-compress-1.21.jar;" +
             base_path +
-            "meta/libraries/org/ow2/asm/asm-commons/9.7/asm-commons-9.7.jar;" +
-            base_path +
-            "meta/libraries/org/ow2/asm/asm-tree/9.7/asm-tree-9.7.jar;" +
-            base_path +
-            "meta/libraries/org/ow2/asm/asm-util/9.7/asm-util-9.7.jar;" +
-            base_path +
-            "meta/libraries/org/ow2/asm/asm-analysis/9.7/asm-analysis-9.7.jar;" +
-            base_path +
-            "meta/libraries/net/minecraftforge/accesstransformers/8.0.4/accesstransformers-8.0.4.jar;" +
-            base_path +
-            "meta/libraries/org/antlr/antlr4-runtime/4.9.1/antlr4-runtime-4.9.1.jar;" +
-            base_path +
-            "meta/libraries/net/minecraftforge/eventbus/6.0.3/eventbus-6.0.3.jar;" +
-            base_path +
-            "meta/libraries/net/minecraftforge/forgespi/6.0.0/forgespi-6.0.0.jar;" +
-            base_path +
-            "meta/libraries/net/minecraftforge/coremods/5.0.1/coremods-5.0.1.jar;" +
-            base_path +
-            "meta/libraries/cpw/mods/modlauncher/10.0.8/modlauncher-10.0.8.jar;" +
-            base_path +
-            "meta/libraries/net/minecraftforge/unsafe/0.2.0/unsafe-0.2.0.jar;" +
+            "meta/libraries/com/github/oshi/oshi-core/5.8.5/oshi-core-5.8.5.jar;" +
             base_path +
             "meta/libraries/com/electronwill/night-config/core/3.6.4/core-3.6.4.jar;" +
             base_path +
-            "meta/libraries/com/electronwill/night-config/toml/3.6.4/toml-3.6.4.jar;" +
+            "meta/libraries/org/ow2/asm/asm-tree/9.7/asm-tree-9.7.jar;" +
+            base_path +
+            "meta/libraries/org/lwjgl/lwjgl-jemalloc/3.3.1/lwjgl-jemalloc-3.3.1.jar;" +
+            base_path +
+            "meta/libraries/com/google/guava/guava/31.0.1-jre/guava-31.0.1-jre.jar;" +
+            base_path +
+            "meta/libraries/net/java/dev/jna/jna/5.10.0/jna-5.10.0.jar;" +
+            base_path +
+            "meta/libraries/org/lwjgl/lwjgl-openal/3.3.1/lwjgl-openal-3.3.1-natives-windows.jar;" +
+            base_path +
+            "meta/libraries/org/apache/httpcomponents/httpcore/4.4.14/httpcore-4.4.14.jar;" +
+            base_path +
+            "meta/libraries/com/mojang/logging/1.0.0/logging-1.0.0.jar;" +
+            base_path +
+            "meta/libraries/org/ow2/asm/asm/9.7/asm-9.7.jar;" +
+            base_path +
+            "meta/libraries/com/mojang/blocklist/1.0.10/blocklist-1.0.10.jar;" +
+            base_path +
+            "meta/libraries/net/minecraftforge/JarJarSelector/0.3.16/JarJarSelector-0.3.16.jar;" +
+            base_path +
+            "meta/libraries/org/lwjgl/lwjgl/3.3.1/lwjgl-3.3.1-natives-windows.jar;" +
+            base_path +
+            "meta/libraries/org/apache/logging/log4j/log4j-core/2.17.0/log4j-core-2.17.0.jar;" +
+            base_path +
+            "meta/libraries/org/ow2/asm/asm-commons/9.7/asm-commons-9.7.jar;" +
+            base_path +
+            "meta/libraries/net/minecraftforge/JarJarFileSystems/0.3.16/JarJarFileSystems-0.3.16.jar;" +
+            base_path +
+            "meta/libraries/org/antlr/antlr4-runtime/4.9.1/antlr4-runtime-4.9.1.jar;" +
+            base_path +
+            "meta/libraries/org/lwjgl/lwjgl-stb/3.3.1/lwjgl-stb-3.3.1-natives-windows.jar;" +
+            base_path +
+            "meta/libraries/org/jline/jline-reader/3.12.1/jline-reader-3.12.1.jar;" +
             base_path +
             "meta/libraries/org/apache/maven/maven-artifact/3.8.5/maven-artifact-3.8.5.jar;" +
+            base_path +
+            "meta/libraries/org/lwjgl/lwjgl-tinyfd/3.3.1/lwjgl-tinyfd-3.3.1-natives-windows.jar;" +
+            base_path +
+            "meta/libraries/org/apache/logging/log4j/log4j-slf4j18-impl/2.17.0/log4j-slf4j18-impl-2.17.0.jar;" +
+            base_path +
+            "meta/libraries/io/netty/netty-handler/4.1.77.Final/netty-handler-4.1.77.Final.jar;" +
+            base_path +
+            "meta/libraries/commons-codec/commons-codec/1.15/commons-codec-1.15.jar;" +
+            base_path +
+            "meta/libraries/org/lwjgl/lwjgl-stb/3.3.1/lwjgl-stb-3.3.1-natives-windows-arm64.jar;" +
+            base_path +
+            "meta/libraries/org/lwjgl/lwjgl-opengl/3.3.1/lwjgl-opengl-3.3.1-natives-windows-x86.jar;" +
+            base_path +
+            "meta/libraries/cpw/mods/bootstraplauncher/1.1.2/bootstraplauncher-1.1.2.jar;" +
+            base_path +
+            "meta/libraries/io/netty/netty-transport-classes-epoll/4.1.77.Final/netty-transport-classes-epoll-4.1.77.Final.jar;" +
+            base_path +
+            "meta/libraries/org/lwjgl/lwjgl-jemalloc/3.3.1/lwjgl-jemalloc-3.3.1-natives-windows.jar;" +
+            base_path +
+            "meta/libraries/com/mojang/patchy/2.2.10/patchy-2.2.10.jar;" +
+            base_path +
+            "meta/libraries/org/lwjgl/lwjgl-tinyfd/3.3.1/lwjgl-tinyfd-3.3.1-natives-windows-arm64.jar;" +
             base_path +
             "meta/libraries/net/jodah/typetools/0.8.3/typetools-0.8.3.jar;" +
             base_path +
             "meta/libraries/net/minecrell/terminalconsoleappender/1.2.0/terminalconsoleappender-1.2.0.jar;" +
             base_path +
-            "meta/libraries/org/jline/jline-reader/3.12.1/jline-reader-3.12.1.jar;" +
-            base_path +
-            "meta/libraries/org/jline/jline-terminal/3.12.1/jline-terminal-3.12.1.jar;" +
-            base_path +
-            "meta/libraries/org/spongepowered/mixin/0.8.5/mixin-0.8.5.jar;" +
-            base_path +
-            "meta/libraries/org/openjdk/nashorn/nashorn-core/15.3/nashorn-core-15.3.jar;" +
-            base_path +
-            "meta/libraries/net/minecraftforge/JarJarSelector/0.3.16/JarJarSelector-0.3.16.jar;" +
-            base_path +
-            "meta/libraries/net/minecraftforge/JarJarMetadata/0.3.16/JarJarMetadata-0.3.16.jar;" +
-            base_path +
-            "meta/libraries/cpw/mods/bootstraplauncher/1.1.2/bootstraplauncher-1.1.2.jar;" +
-            base_path +
-            "meta/libraries/net/minecraftforge/JarJarFileSystems/0.3.16/JarJarFileSystems-0.3.16.jar;" +
-            base_path +
-            "meta/libraries/net/minecraftforge/fmlloader/1.19.2-43.3.13/fmlloader-1.19.2-43.3.13.jar;" +
-            base_path +
-            "meta/libraries/com/mojang/logging/1.0.0/logging-1.0.0.jar;" +
-            base_path +
-            "meta/libraries/com/mojang/blocklist/1.0.10/blocklist-1.0.10.jar;" +
-            base_path +
-            "meta/libraries/ru/tln4/empty/0.1/empty-0.1.jar;" +
-            base_path +
-            "meta/libraries/com/github/oshi/oshi-core/5.8.5/oshi-core-5.8.5.jar;" +
-            base_path +
-            "meta/libraries/net/java/dev/jna/jna/5.10.0/jna-5.10.0.jar;" +
-            base_path +
-            "meta/libraries/net/java/dev/jna/jna-platform/5.10.0/jna-platform-5.10.0.jar;" +
-            base_path +
-            "meta/libraries/org/slf4j/slf4j-api/1.8.0-beta4/slf4j-api-1.8.0-beta4.jar;" +
-            base_path +
-            "meta/libraries/org/apache/logging/log4j/log4j-slf4j18-impl/2.17.0/log4j-slf4j18-impl-2.17.0.jar;" +
-            base_path +
-            "meta/libraries/com/ibm/icu/icu4j/70.1/icu4j-70.1.jar;" +
-            base_path +
-            "meta/libraries/com/mojang/javabridge/1.2.24/javabridge-1.2.24.jar;" +
-            base_path +
-            "meta/libraries/net/sf/jopt-simple/jopt-simple/5.0.4/jopt-simple-5.0.4.jar;" +
-            base_path +
-            "meta/libraries/io/netty/netty-common/4.1.77.Final/netty-common-4.1.77.Final.jar;" +
-            base_path +
-            "meta/libraries/io/netty/netty-buffer/4.1.77.Final/netty-buffer-4.1.77.Final.jar;" +
-            base_path +
-            "meta/libraries/io/netty/netty-codec/4.1.77.Final/netty-codec-4.1.77.Final.jar;" +
-            base_path +
-            "meta/libraries/io/netty/netty-handler/4.1.77.Final/netty-handler-4.1.77.Final.jar;" +
+            "meta/libraries/org/lwjgl/lwjgl-openal/3.3.1/lwjgl-openal-3.3.1.jar;" +
             base_path +
             "meta/libraries/io/netty/netty-resolver/4.1.77.Final/netty-resolver-4.1.77.Final.jar;" +
             base_path +
-            "meta/libraries/io/netty/netty-transport/4.1.77.Final/netty-transport-4.1.77.Final.jar;" +
+            "meta/libraries/net/minecraftforge/fmlloader/1.19.2-43.3.13/fmlloader-1.19.2-43.3.13.jar;" +
             base_path +
-            "meta/libraries/io/netty/netty-transport-native-unix-common/4.1.77.Final/netty-transport-native-unix-common-4.1.77.Final.jar;" +
+            "meta/libraries/io/netty/netty-common/4.1.77.Final/netty-common-4.1.77.Final.jar;" +
             base_path +
-            "meta/libraries/io/netty/netty-transport-classes-epoll/4.1.77.Final/netty-transport-classes-epoll-4.1.77.Final.jar;" +
+            "meta/libraries/io/netty/netty-codec/4.1.77.Final/netty-codec-4.1.77.Final.jar;" +
             base_path +
-            "meta/libraries/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar;" +
+            "meta/libraries/org/lwjgl/lwjgl-stb/3.3.1/lwjgl-stb-3.3.1.jar;" +
             base_path +
-            "meta/libraries/com/google/guava/guava/31.0.1-jre/guava-31.0.1-jre.jar;" +
+            "meta/libraries/org/ow2/asm/asm-analysis/9.7/asm-analysis-9.7.jar;" +
             base_path +
-            "meta/libraries/org/apache/commons/commons-lang3/3.12.0/commons-lang3-3.12.0.jar;" +
+            "meta/libraries/com/mojang/text2speech/1.16.7/text2speech-1.16.7.jar;" +
             base_path +
-            "meta/libraries/commons-io/commons-io/2.11.0/commons-io-2.11.0.jar;" +
+            "meta/libraries/org/spongepowered/mixin/0.8.5/mixin-0.8.5.jar;" +
             base_path +
-            "meta/libraries/commons-codec/commons-codec/1.15/commons-codec-1.15.jar;" +
+            "meta/libraries/com/electronwill/night-config/toml/3.6.4/toml-3.6.4.jar;" +
             base_path +
-            "meta/libraries/com/mojang/brigadier/1.0.18/brigadier-1.0.18.jar;" +
+            "meta/libraries/org/lwjgl/lwjgl/3.3.1/lwjgl-3.3.1-natives-windows-x86.jar;" +
             base_path +
-            "meta/libraries/com/mojang/datafixerupper/5.0.28/datafixerupper-5.0.28.jar;" +
+            "meta/libraries/org/lwjgl/lwjgl/3.3.1/lwjgl-3.3.1-natives-windows-arm64.jar;" +
             base_path +
-            "meta/libraries/com/google/code/gson/gson/2.8.9/gson-2.8.9.jar;" +
-            base_path +
-            "meta/libraries/com/mojang/authlib/3.18.38/authlib-3.18.38.jar;" +
-            base_path +
-            "meta/libraries/org/apache/commons/commons-compress/1.21/commons-compress-1.21.jar;" +
-            base_path +
-            "meta/libraries/org/apache/httpcomponents/httpclient/4.5.13/httpclient-4.5.13.jar;" +
-            base_path +
-            "meta/libraries/commons-logging/commons-logging/1.2/commons-logging-1.2.jar;" +
-            base_path +
-            "meta/libraries/org/apache/httpcomponents/httpcore/4.4.14/httpcore-4.4.14.jar;" +
+            "meta/libraries/cpw/mods/modlauncher/10.0.8/modlauncher-10.0.8.jar;" +
             base_path +
             "meta/libraries/it/unimi/dsi/fastutil/8.5.6/fastutil-8.5.6.jar;" +
             base_path +
             "meta/libraries/org/apache/logging/log4j/log4j-api/2.17.0/log4j-api-2.17.0.jar;" +
             base_path +
-            "meta/libraries/org/apache/logging/log4j/log4j-core/2.17.0/log4j-core-2.17.0.jar;" +
+            "meta/libraries/io/netty/netty-buffer/4.1.77.Final/netty-buffer-4.1.77.Final.jar;" +
             base_path +
-            "meta/libraries/org/lwjgl/lwjgl/3.3.1/lwjgl-3.3.1.jar;" +
-            base_path +
-            "meta/libraries/org/lwjgl/lwjgl/3.3.1/lwjgl-3.3.1-natives-windows.jar;" +
-            base_path +
-            "meta/libraries/org/lwjgl/lwjgl/3.3.1/lwjgl-3.3.1-natives-windows-x86.jar;" +
-            base_path +
-            "meta/libraries/org/lwjgl/lwjgl-jemalloc/3.3.1/lwjgl-jemalloc-3.3.1.jar;" +
-            base_path +
-            "meta/libraries/org/lwjgl/lwjgl-jemalloc/3.3.1/lwjgl-jemalloc-3.3.1-natives-windows.jar;" +
-            base_path +
-            "meta/libraries/org/lwjgl/lwjgl-jemalloc/3.3.1/lwjgl-jemalloc-3.3.1-natives-windows-x86.jar;" +
-            base_path +
-            "meta/libraries/org/lwjgl/lwjgl-openal/3.3.1/lwjgl-openal-3.3.1.jar;" +
-            base_path +
-            "meta/libraries/org/lwjgl/lwjgl-openal/3.3.1/lwjgl-openal-3.3.1-natives-windows.jar;" +
-            base_path +
-            "meta/libraries/org/lwjgl/lwjgl-openal/3.3.1/lwjgl-openal-3.3.1-natives-windows-x86.jar;" +
-            base_path +
-            "meta/libraries/org/lwjgl/lwjgl-opengl/3.3.1/lwjgl-opengl-3.3.1.jar;" +
+            "meta/libraries/net/minecraftforge/coremods/5.0.1/coremods-5.0.1.jar;" +
             base_path +
             "meta/libraries/org/lwjgl/lwjgl-opengl/3.3.1/lwjgl-opengl-3.3.1-natives-windows.jar;" +
             base_path +
-            "meta/libraries/org/lwjgl/lwjgl-opengl/3.3.1/lwjgl-opengl-3.3.1-natives-windows-x86.jar;" +
+            "meta/libraries/com/ibm/icu/icu4j/70.1/icu4j-70.1.jar;" +
+            base_path +
+            "meta/libraries/org/lwjgl/lwjgl-tinyfd/3.3.1/lwjgl-tinyfd-3.3.1.jar;" +
+            base_path +
+            "meta/libraries/io/netty/netty-transport/4.1.77.Final/netty-transport-4.1.77.Final.jar;" +
+            base_path +
+            "meta/libraries/net/minecraftforge/JarJarMetadata/0.3.16/JarJarMetadata-0.3.16.jar;" +
+            base_path +
+            "meta/libraries/org/lwjgl/lwjgl-tinyfd/3.3.1/lwjgl-tinyfd-3.3.1-natives-windows-x86.jar;" +
+            base_path +
+            "meta/libraries/org/lwjgl/lwjgl-glfw/3.3.1/lwjgl-glfw-3.3.1-natives-windows-x86.jar;" +
+            base_path +
+            "meta/libraries/org/apache/commons/commons-lang3/3.12.0/commons-lang3-3.12.0.jar;" +
+            base_path +
+            "meta/libraries/org/lwjgl/lwjgl-jemalloc/3.3.1/lwjgl-jemalloc-3.3.1-natives-windows-x86.jar;" +
+            base_path +
+            "meta/libraries/net/minecraftforge/eventbus/6.0.3/eventbus-6.0.3.jar;" +
+            base_path +
+            "meta/libraries/com/google/code/gson/gson/2.8.9/gson-2.8.9.jar;" +
+            base_path +
+            "meta/libraries/org/apache/httpcomponents/httpclient/4.5.13/httpclient-4.5.13.jar;" +
+            base_path +
+            "meta/libraries/org/openjdk/nashorn/nashorn-core/15.3/nashorn-core-15.3.jar;" +
+            base_path +
+            "meta/libraries/net/minecraftforge/unsafe/0.2.0/unsafe-0.2.0.jar;" +
+            base_path +
+            "meta/libraries/org/lwjgl/lwjgl-openal/3.3.1/lwjgl-openal-3.3.1-natives-windows-arm64.jar;" +
             base_path +
             "meta/libraries/org/lwjgl/lwjgl-glfw/3.3.1/lwjgl-glfw-3.3.1.jar;" +
             base_path +
             "meta/libraries/org/lwjgl/lwjgl-glfw/3.3.1/lwjgl-glfw-3.3.1-natives-windows.jar;" +
             base_path +
-            "meta/libraries/org/lwjgl/lwjgl-glfw/3.3.1/lwjgl-glfw-3.3.1-natives-windows-x86.jar;" +
+            "meta/libraries/org/lwjgl/lwjgl-glfw/3.3.1/lwjgl-glfw-3.3.1-natives-windows-arm64.jar;" +
             base_path +
-            "meta/libraries/org/lwjgl/lwjgl-stb/3.3.1/lwjgl-stb-3.3.1.jar;" +
+            "meta/libraries/net/sf/jopt-simple/jopt-simple/5.0.4/jopt-simple-5.0.4.jar;" +
             base_path +
-            "meta/libraries/org/lwjgl/lwjgl-stb/3.3.1/lwjgl-stb-3.3.1-natives-windows.jar;" +
+            "meta/libraries/com/mojang/authlib/3.18.38/authlib-3.18.38.jar;" +
+            base_path +
+            "meta/libraries/cpw/mods/securejarhandler/2.1.4/securejarhandler-2.1.4.jar;" +
+            base_path +
+            "meta/libraries/org/lwjgl/lwjgl-opengl/3.3.1/lwjgl-opengl-3.3.1.jar;" +
+            base_path +
+            "meta/libraries/commons-io/commons-io/2.11.0/commons-io-2.11.0.jar;" +
+            base_path +
+            "meta/libraries/org/lwjgl/lwjgl-openal/3.3.1/lwjgl-openal-3.3.1-natives-windows-x86.jar;" +
+            base_path +
+            "meta/libraries/io/netty/netty-transport-native-unix-common/4.1.77.Final/netty-transport-native-unix-common-4.1.77.Final.jar;" +
             base_path +
             "meta/libraries/org/lwjgl/lwjgl-stb/3.3.1/lwjgl-stb-3.3.1-natives-windows-x86.jar;" +
             base_path +
-            "meta/libraries/org/lwjgl/lwjgl-tinyfd/3.3.1/lwjgl-tinyfd-3.3.1.jar;" +
+            "meta/libraries/com/mojang/brigadier/1.0.18/brigadier-1.0.18.jar;" +
             base_path +
-            "meta/libraries/org/lwjgl/lwjgl-tinyfd/3.3.1/lwjgl-tinyfd-3.3.1-natives-windows.jar;" +
+            "meta/libraries/net/minecraftforge/accesstransformers/8.0.4/accesstransformers-8.0.4.jar;" +
             base_path +
-            "meta/libraries/org/lwjgl/lwjgl-tinyfd/3.3.1/lwjgl-tinyfd-3.3.1-natives-windows-x86.jar;" +
+            "meta/libraries/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar;" +
             base_path +
-            "meta/libraries/com/mojang/text2speech/1.16.7/text2speech-1.16.7.jar;" +
+            "meta/libraries/commons-logging/commons-logging/1.2/commons-logging-1.2.jar;" +
             base_path +
-            "meta/libraries/org/lwjgl/lwjgl-glfw/3.3.1/lwjgl-glfw-3.3.1-natives-windows-arm64.jar;" +
+            "meta/libraries/com/mojang/datafixerupper/5.0.28/datafixerupper-5.0.28.jar;" +
             base_path +
             "meta/libraries/org/lwjgl/lwjgl-jemalloc/3.3.1/lwjgl-jemalloc-3.3.1-natives-windows-arm64.jar;" +
             base_path +
-            "meta/libraries/org/lwjgl/lwjgl-openal/3.3.1/lwjgl-openal-3.3.1-natives-windows-arm64.jar;" +
+            "meta/libraries/org/jline/jline-terminal/3.12.1/jline-terminal-3.12.1.jar;" +
+            base_path +
+            "meta/libraries/net/java/dev/jna/jna-platform/5.10.0/jna-platform-5.10.0.jar;" +
+            base_path +
+            "meta/libraries/org/ow2/asm/asm-util/9.7/asm-util-9.7.jar;" +
+            base_path +
+            "meta/libraries/net/minecraftforge/forgespi/6.0.0/forgespi-6.0.0.jar;" +
+            base_path +
+            "meta/libraries/org/slf4j/slf4j-api/1.8.0-beta4/slf4j-api-1.8.0-beta4.jar;" +
+            base_path +
+            "meta/libraries/com/mojang/javabridge/1.2.24/javabridge-1.2.24.jar;" +
             base_path +
             "meta/libraries/org/lwjgl/lwjgl-opengl/3.3.1/lwjgl-opengl-3.3.1-natives-windows-arm64.jar;" +
-            base_path +
-            "meta/libraries/org/lwjgl/lwjgl-stb/3.3.1/lwjgl-stb-3.3.1-natives-windows-arm64.jar;" +
-            base_path +
-            "meta/libraries/org/lwjgl/lwjgl-tinyfd/3.3.1/lwjgl-tinyfd-3.3.1-natives-windows-arm64.jar;" +
-            base_path +
-            "meta/libraries/org/lwjgl/lwjgl/3.3.1/lwjgl-3.3.1-natives-windows-arm64.jar;" +
             minecraft_path +
-            '/Forge 1.19.2.jar" !-Djava.net.preferIPv6Addresses=system !"-DignoreList=bootstraplauncher,securejarhandler,asm-commons,asm-util,asm-analysis,asm-tree,asm,JarJarFileSystems,client-extra,fmlcore,javafmllanguage,lowcodelanguage,mclanguage,forge-,dungeoncraft.jar" ' +
+            '/dungeoncraft.jar !-Djava.net.preferIPv6Addresses=system !"-DignoreList=bootstraplauncher,securejarhandler,asm-commons,asm-util,asm-analysis,asm-tree,asm,JarJarFileSystems,client-extra,fmlcore,javafmllanguage,lowcodelanguage,mclanguage,forge-,dungeoncraft.jar" ' +
             "!-DmergeModules=jna-5.10.0.jar,jna-platform-5.10.0.jar !-DlibraryDirectory=" +
             base_path +
             "meta/libraries !-p " +
@@ -730,21 +730,12 @@ function launchingGame() {
 
           const launch = childProcess.spawn(filename, command);
 
-          BrowserWindow.fromId(1).webContents.setWindowOpenHandler(
-            ({ url }) => {
-              if (url.startsWith("https:") || url.startsWith("http:"))
-                import_electron.shell.openExternal(url);
-              console.log("blocked by openHandler");
-              return { action: "deny" };
-            }
-          );
-
           launch.stdout.on("data", (data) => {
-            BrowserWindow.fromId(1).webContents.send("minecraft-log", data);
+            console.log(data.toString());
           });
 
           launch.stderr.on("data", (data) => {
-            BrowserWindow.fromId(1).webContents.send("minecraft-log", data);
+            console.log(data.toString());
           });
 
           // In this example, only windows with the `about:blank` url will be created.
@@ -781,3 +772,30 @@ ipcMain.on("launch", (event, arg) => {
 });
 
 //  https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.zip  <-- java 17 installation
+
+let a =
+  "C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl/3.3.1/lwjgl-3.3.1.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/apache/commons/commons-compress/1.21/commons-compress-1.21.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/com/github/oshi/oshi-core/5.8.5/oshi-core-5.8.5.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/com/electronwill/night-config/core/3.6.4/core-3.6.4.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/ow2/asm/asm-tree/9.7/asm-tree-9.7.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-jemalloc/3.3.1/lwjgl-jemalloc-3.3.1.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/com/google/guava/guava/31.0.1-jre/guava-31.0.1-jre.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/net/java/dev/jna/jna/5.10.0/jna-5.10.0.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-openal/3.3.1/lwjgl-openal-3.3.1-natives-windows.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/apache/httpcomponents/httpcore/4.4.14/httpcore-4.4.14.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/com/mojang/logging/1.0.0/logging-1.0.0.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/ow2/asm/asm/9.7/asm-9.7.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/com/mojang/blocklist/1.0.10/blocklist-1.0.10.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/net/minecraftforge/JarJarSelector/0.3.16/JarJarSelector-0.3.16.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl/3.3.1/lwjgl-3.3.1-natives-windows.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/apache/logging/log4j/log4j-core/2.17.0/log4j-core-2.17.0.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/ow2/asm/asm-commons/9.7/asm-commons-9.7.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/net/minecraftforge/JarJarFileSystems/0.3.16/JarJarFileSystems-0.3.16.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/antlr/antlr4-runtime/4.9.1/antlr4-runtime-4.9.1.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-stb/3.3.1/lwjgl-stb-3.3.1-natives-windows.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/jline/jline-reader/3.12.1/jline-reader-3.12.1.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/apache/maven/maven-artifact/3.8.5/maven-artifact-3.8.5.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-tinyfd/3.3.1/lwjgl-tinyfd-3.3.1-natives-windows.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/apache/logging/log4j/log4j-slf4j18-impl/2.17.0/log4j-slf4j18-impl-2.17.0.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/io/netty/netty-handler/4.1.77.Final/netty-handler-4.1.77.Final.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/commons-codec/commons-codec/1.15/commons-codec-1.15.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-stb/3.3.1/lwjgl-stb-3.3.1-natives-windows-arm64.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-opengl/3.3.1/lwjgl-opengl-3.3.1-natives-windows-x86.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/cpw/mods/bootstraplauncher/1.1.2/bootstraplauncher-1.1.2.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/io/netty/netty-transport-classes-epoll/4.1.77.Final/netty-transport-classes-epoll-4.1.77.Final.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-jemalloc/3.3.1/lwjgl-jemalloc-3.3.1-natives-windows.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/com/mojang/patchy/2.2.10/patchy-2.2.10.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-tinyfd/3.3.1/lwjgl-tinyfd-3.3.1-natives-windows-arm64.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/net/jodah/typetools/0.8.3/typetools-0.8.3.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/net/minecrell/terminalconsoleappender/1.2.0/terminalconsoleappender-1.2.0.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-openal/3.3.1/lwjgl-openal-3.3.1.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/io/netty/netty-resolver/4.1.77.Final/netty-resolver-4.1.77.Final.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/net/minecraftforge/fmlloader/1.19.2-43.3.13/fmlloader-1.19.2-43.3.13.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/io/netty/netty-common/4.1.77.Final/netty-common-4.1.77.Final.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/io/netty/netty-codec/4.1.77.Final/netty-codec-4.1.77.Final.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-stb/3.3.1/lwjgl-stb-3.3.1.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/ow2/asm/asm-analysis/9.7/asm-analysis-9.7.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/com/mojang/text2speech/1.16.7/text2speech-1.16.7.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/spongepowered/mixin/0.8.5/mixin-0.8.5.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/com/electronwill/night-config/toml/3.6.4/toml-3.6.4.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl/3.3.1/lwjgl-3.3.1-natives-windows-x86.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl/3.3.1/lwjgl-3.3.1-natives-windows-arm64.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/cpw/mods/modlauncher/10.0.8/modlauncher-10.0.8.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/it/unimi/dsi/fastutil/8.5.6/fastutil-8.5.6.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/apache/logging/log4j/log4j-api/2.17.0/log4j-api-2.17.0.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/io/netty/netty-buffer/4.1.77.Final/netty-buffer-4.1.77.Final.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/net/minecraftforge/coremods/5.0.1/coremods-5.0.1.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-opengl/3.3.1/lwjgl-opengl-3.3.1-natives-windows.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/com/ibm/icu/icu4j/70.1/icu4j-70.1.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-tinyfd/3.3.1/lwjgl-tinyfd-3.3.1.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/io/netty/netty-transport/4.1.77.Final/netty-transport-4.1.77.Final.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/net/minecraftforge/JarJarMetadata/0.3.16/JarJarMetadata-0.3.16.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-tinyfd/3.3.1/lwjgl-tinyfd-3.3.1-natives-windows-x86.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-glfw/3.3.1/lwjgl-glfw-3.3.1-natives-windows-x86.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/apache/commons/commons-lang3/3.12.0/commons-lang3-3.12.0.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-jemalloc/3.3.1/lwjgl-jemalloc-3.3.1-natives-windows-x86.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/net/minecraftforge/eventbus/6.0.3/eventbus-6.0.3.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/com/google/code/gson/gson/2.8.9/gson-2.8.9.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/apache/httpcomponents/httpclient/4.5.13/httpclient-4.5.13.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/openjdk/nashorn/nashorn-core/15.3/nashorn-core-15.3.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/net/minecraftforge/unsafe/0.2.0/unsafe-0.2.0.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-openal/3.3.1/lwjgl-openal-3.3.1-natives-windows-arm64.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-glfw/3.3.1/lwjgl-glfw-3.3.1.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-glfw/3.3.1/lwjgl-glfw-3.3.1-natives-windows.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-glfw/3.3.1/lwjgl-glfw-3.3.1-natives-windows-arm64.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/net/sf/jopt-simple/jopt-simple/5.0.4/jopt-simple-5.0.4.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/com/mojang/authlib/3.18.38/authlib-3.18.38.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/cpw/mods/securejarhandler/2.1.4/securejarhandler-2.1.4.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-opengl/3.3.1/lwjgl-opengl-3.3.1.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/commons-io/commons-io/2.11.0/commons-io-2.11.0.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-openal/3.3.1/lwjgl-openal-3.3.1-natives-windows-x86.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/io/netty/netty-transport-native-unix-common/4.1.77.Final/netty-transport-native-unix-common-4.1.77.Final.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-stb/3.3.1/lwjgl-stb-3.3.1-natives-windows-x86.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/com/mojang/brigadier/1.0.18/brigadier-1.0.18.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/net/minecraftforge/accesstransformers/8.0.4/accesstransformers-8.0.4.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/commons-logging/commons-logging/1.2/commons-logging-1.2.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/com/mojang/datafixerupper/5.0.28/datafixerupper-5.0.28.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-jemalloc/3.3.1/lwjgl-jemalloc-3.3.1-natives-windows-arm64.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/jline/jline-terminal/3.12.1/jline-terminal-3.12.1.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/net/java/dev/jna/jna-platform/5.10.0/jna-platform-5.10.0.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/ow2/asm/asm-util/9.7/asm-util-9.7.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/net/minecraftforge/forgespi/6.0.0/forgespi-6.0.0.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/slf4j/slf4j-api/1.8.0-beta4/slf4j-api-1.8.0-beta4.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/com/mojang/javabridge/1.2.24/javabridge-1.2.24.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/meta/libraries/org/lwjgl/lwjgl-opengl/3.3.1/lwjgl-opengl-3.3.1-natives-windows-arm64.jar;C:/Users/lucia/AppData/Roaming/.dungeoncraft/dungeoncraft/dungeoncraft.jar";
+
+let b =
+  "meta/libraries/org/lwjgl/lwjgl/3.3.1/lwjgl-3.3.1.jar;meta/libraries/org/apache/commons/commons-compress/1.21/commons-compress-1.21.jar;meta/libraries/com/github/oshi/oshi-core/5.8.5/oshi-core-5.8.5.jar;meta/libraries/com/electronwill/night-config/core/3.6.4/core-3.6.4.jar;meta/libraries/org/ow2/asm/asm-tree/9.7/asm-tree-9.7.jar;meta/libraries/org/lwjgl/lwjgl-jemalloc/3.3.1/lwjgl-jemalloc-3.3.1.jar;meta/libraries/com/google/guava/guava/31.0.1-jre/guava-31.0.1-jre.jar;meta/libraries/net/java/dev/jna/jna/5.10.0/jna-5.10.0.jar;meta/libraries/org/lwjgl/lwjgl-openal/3.3.1/lwjgl-openal-3.3.1-natives-windows.jar;meta/libraries/org/apache/httpcomponents/httpcore/4.4.14/httpcore-4.4.14.jar;meta/libraries/com/mojang/logging/1.0.0/logging-1.0.0.jar;meta/libraries/org/ow2/asm/asm/9.7/asm-9.7.jar;meta/libraries/com/mojang/blocklist/1.0.10/blocklist-1.0.10.jar;meta/libraries/net/minecraftforge/JarJarSelector/0.3.16/JarJarSelector-0.3.16.jar;meta/libraries/org/lwjgl/lwjgl/3.3.1/lwjgl-3.3.1-natives-windows.jar;meta/libraries/org/apache/logging/log4j/log4j-core/2.17.0/log4j-core-2.17.0.jar;meta/libraries/org/ow2/asm/asm-commons/9.7/asm-commons-9.7.jar;meta/libraries/net/minecraftforge/JarJarFileSystems/0.3.16/JarJarFileSystems-0.3.16.jar;meta/libraries/org/antlr/antlr4-runtime/4.9.1/antlr4-runtime-4.9.1.jar;meta/libraries/org/lwjgl/lwjgl-stb/3.3.1/lwjgl-stb-3.3.1-natives-windows.jar;meta/libraries/org/jline/jline-reader/3.12.1/jline-reader-3.12.1.jar;meta/libraries/org/apache/maven/maven-artifact/3.8.5/maven-artifact-3.8.5.jar;meta/libraries/org/lwjgl/lwjgl-tinyfd/3.3.1/lwjgl-tinyfd-3.3.1-natives-windows.jar;meta/libraries/org/apache/logging/log4j/log4j-slf4j18-impl/2.17.0/log4j-slf4j18-impl-2.17.0.jar;meta/libraries/io/netty/netty-handler/4.1.77.Final/netty-handler-4.1.77.Final.jar;meta/libraries/commons-codec/commons-codec/1.15/commons-codec-1.15.jar;meta/libraries/org/lwjgl/lwjgl-stb/3.3.1/lwjgl-stb-3.3.1-natives-windows-arm64.jar;meta/libraries/org/lwjgl/lwjgl-opengl/3.3.1/lwjgl-opengl-3.3.1-natives-windows-x86.jar;meta/libraries/cpw/mods/bootstraplauncher/1.1.2/bootstraplauncher-1.1.2.jar;meta/libraries/io/netty/netty-transport-classes-epoll/4.1.77.Final/netty-transport-classes-epoll-4.1.77.Final.jar;meta/libraries/org/lwjgl/lwjgl-jemalloc/3.3.1/lwjgl-jemalloc-3.3.1-natives-windows.jar;meta/libraries/com/mojang/patchy/2.2.10/patchy-2.2.10.jar;meta/libraries/org/lwjgl/lwjgl-tinyfd/3.3.1/lwjgl-tinyfd-3.3.1-natives-windows-arm64.jar;meta/libraries/net/jodah/typetools/0.8.3/typetools-0.8.3.jar;meta/libraries/net/minecrell/terminalconsoleappender/1.2.0/terminalconsoleappender-1.2.0.jar;meta/libraries/org/lwjgl/lwjgl-openal/3.3.1/lwjgl-openal-3.3.1.jar;meta/libraries/io/netty/netty-resolver/4.1.77.Final/netty-resolver-4.1.77.Final.jar;meta/libraries/net/minecraftforge/fmlloader/1.19.2-43.3.13/fmlloader-1.19.2-43.3.13.jar;meta/libraries/io/netty/netty-common/4.1.77.Final/netty-common-4.1.77.Final.jar;meta/libraries/io/netty/netty-codec/4.1.77.Final/netty-codec-4.1.77.Final.jar;meta/libraries/org/lwjgl/lwjgl-stb/3.3.1/lwjgl-stb-3.3.1.jar;meta/libraries/org/ow2/asm/asm-analysis/9.7/asm-analysis-9.7.jar;meta/libraries/com/mojang/text2speech/1.16.7/text2speech-1.16.7.jar;meta/libraries/org/spongepowered/mixin/0.8.5/mixin-0.8.5.jar;meta/libraries/com/electronwill/night-config/toml/3.6.4/toml-3.6.4.jar;meta/libraries/org/lwjgl/lwjgl/3.3.1/lwjgl-3.3.1-natives-windows-x86.jar;meta/libraries/org/lwjgl/lwjgl/3.3.1/lwjgl-3.3.1-natives-windows-arm64.jar;meta/libraries/cpw/mods/modlauncher/10.0.8/modlauncher-10.0.8.jar;meta/libraries/it/unimi/dsi/fastutil/8.5.6/fastutil-8.5.6.jar;meta/libraries/org/apache/logging/log4j/log4j-api/2.17.0/log4j-api-2.17.0.jar;meta/libraries/io/netty/netty-buffer/4.1.77.Final/netty-buffer-4.1.77.Final.jar;meta/libraries/net/minecraftforge/coremods/5.0.1/coremods-5.0.1.jar;meta/libraries/org/lwjgl/lwjgl-opengl/3.3.1/lwjgl-opengl-3.3.1-natives-windows.jar;meta/libraries/com/ibm/icu/icu4j/70.1/icu4j-70.1.jar;meta/libraries/org/lwjgl/lwjgl-tinyfd/3.3.1/lwjgl-tinyfd-3.3.1.jar;meta/libraries/io/netty/netty-transport/4.1.77.Final/netty-transport-4.1.77.Final.jar;meta/libraries/net/minecraftforge/JarJarMetadata/0.3.16/JarJarMetadata-0.3.16.jar;meta/libraries/org/lwjgl/lwjgl-tinyfd/3.3.1/lwjgl-tinyfd-3.3.1-natives-windows-x86.jar;meta/libraries/org/lwjgl/lwjgl-glfw/3.3.1/lwjgl-glfw-3.3.1-natives-windows-x86.jar;meta/libraries/org/apache/commons/commons-lang3/3.12.0/commons-lang3-3.12.0.jar;meta/libraries/org/lwjgl/lwjgl-jemalloc/3.3.1/lwjgl-jemalloc-3.3.1-natives-windows-x86.jar;meta/libraries/net/minecraftforge/eventbus/6.0.3/eventbus-6.0.3.jar;meta/libraries/com/google/code/gson/gson/2.8.9/gson-2.8.9.jar;meta/libraries/org/apache/httpcomponents/httpclient/4.5.13/httpclient-4.5.13.jar;meta/libraries/org/openjdk/nashorn/nashorn-core/15.3/nashorn-core-15.3.jar;meta/libraries/net/minecraftforge/unsafe/0.2.0/unsafe-0.2.0.jar;meta/libraries/org/lwjgl/lwjgl-openal/3.3.1/lwjgl-openal-3.3.1-natives-windows-arm64.jar;meta/libraries/org/lwjgl/lwjgl-glfw/3.3.1/lwjgl-glfw-3.3.1.jar;meta/libraries/org/lwjgl/lwjgl-glfw/3.3.1/lwjgl-glfw-3.3.1-natives-windows.jar;meta/libraries/org/lwjgl/lwjgl-glfw/3.3.1/lwjgl-glfw-3.3.1-natives-windows-arm64.jar;meta/libraries/net/sf/jopt-simple/jopt-simple/5.0.4/jopt-simple-5.0.4.jar;meta/libraries/com/mojang/authlib/3.18.38/authlib-3.18.38.jar;meta/libraries/cpw/mods/securejarhandler/2.1.4/securejarhandler-2.1.4.jar;meta/libraries/org/lwjgl/lwjgl-opengl/3.3.1/lwjgl-opengl-3.3.1.jar;meta/libraries/commons-io/commons-io/2.11.0/commons-io-2.11.0.jar;meta/libraries/org/lwjgl/lwjgl-openal/3.3.1/lwjgl-openal-3.3.1-natives-windows-x86.jar;meta/libraries/io/netty/netty-transport-native-unix-common/4.1.77.Final/netty-transport-native-unix-common-4.1.77.Final.jar;meta/libraries/org/lwjgl/lwjgl-stb/3.3.1/lwjgl-stb-3.3.1-natives-windows-x86.jar;meta/libraries/com/mojang/brigadier/1.0.18/brigadier-1.0.18.jar;meta/libraries/net/minecraftforge/accesstransformers/8.0.4/accesstransformers-8.0.4.jar;meta/libraries/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar;meta/libraries/commons-logging/commons-logging/1.2/commons-logging-1.2.jar;meta/libraries/com/mojang/datafixerupper/5.0.28/datafixerupper-5.0.28.jar;meta/libraries/org/lwjgl/lwjgl-jemalloc/3.3.1/lwjgl-jemalloc-3.3.1-natives-windows-arm64.jar;meta/libraries/org/jline/jline-terminal/3.12.1/jline-terminal-3.12.1.jar;meta/libraries/net/java/dev/jna/jna-platform/5.10.0/jna-platform-5.10.0.jar;meta/libraries/org/ow2/asm/asm-util/9.7/asm-util-9.7.jar;meta/libraries/net/minecraftforge/forgespi/6.0.0/forgespi-6.0.0.jar;meta/libraries/org/slf4j/slf4j-api/1.8.0-beta4/slf4j-api-1.8.0-beta4.jar;meta/libraries/com/mojang/javabridge/1.2.24/javabridge-1.2.24.jar;meta/libraries/org/lwjgl/lwjgl-opengl/3.3.1/lwjgl-opengl-3.3.1-natives-windows-arm64.jar;dungeoncraft/dungeoncraft.jar";
+
+a = a.split(";");
+b = b.split(";");
+
+let k = 0;
+let l = 0;
+
+let server_url = "https://luciarey.github.io/dungeoncraft/";
+
+for (var x of a) {
+  if (!fs.existsSync(x)) {
+    const dl = new DownloaderHelper(server_url + b[k], base_path);
+    l++;
+    console.log("Downloading file " + x + "\t" + l);
+    dl.on("end", () => {});
+
+    dl.on("error", (err) => console.log("Download " + x + " Failed", err));
+    dl.start().catch((err) => console.error(err));
+  }
+  k++;
+}

@@ -5,10 +5,6 @@ document.getElementById("close-button").addEventListener("click", (event) => {
   ipc.send("close_window", 1);
 });
 
-const childWindow = window.open("", "modal");
-console.log(childWindow);
-childWindow.document.write("<h1>Hello</h1>");
-
 function settings() {
   ipc.send("settings", "");
 }
