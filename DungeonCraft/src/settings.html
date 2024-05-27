@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="./style.css">
-    <meta charset="utf-8">
+    <link rel="stylesheet" href="./style.css" />
+    <meta charset="utf-8" />
     <title>DungeonCraft</title>
   </head>
   <body>
@@ -13,9 +13,13 @@
         </div>
         <div id="window-controls">
           <div class="button window-hover-close" id="close-button">
-            <img class="icon" id="close" alt="close"
+            <img
+              class="icon"
+              id="close"
+              alt="close"
               srcset="./images/close-w-10.png"
-              draggable="false" />
+              draggable="false"
+            />
           </div>
         </div>
       </div>
@@ -23,19 +27,25 @@
     <div id="main">
       <div class="settings">
         <fieldset>
-            <legend>Изменить ник</legend>
-            <label for="name">
-                <p id="p">Ваш текущий ник: </p>
-                <button class="settingsButton" id ="changeName" onclick="changeName()">Ввести новый ник</button>
-            </label>
+          <legend>Изменить ник</legend>
+          <label for="name">
+            <p id="p">Ваш текущий ник:</p>
+            <button
+              class="settingsButton"
+              id="changeName"
+              onclick="changeName()"
+            >
+              Ввести новый ник
+            </button>
+          </label>
         </fieldset>
         <div class="java">
-            <fieldset>
-                <legend>Аргументы java</legend>
-                <label for="javaargs">
-                    <input required type="text" id="javaargs" value="java -Xmx4G -Xmn196M -XX:+UseConcMarkSweepGC -jar server.jar">
-                </label>
-            </fieldset>
+          <fieldset>
+            <legend>Аргументы java</legend>
+            <label for="javaargs">
+              <input required type="text" id="javaargs" />
+            </label>
+          </fieldset>
         </div>
       </div>
       <script src="./settings.js"></script>
