@@ -416,7 +416,7 @@ async function unzipFiles(dest_path, fileName) {
       console.log("java is ok");
       java_is_ready = true;
     } else if (fileName.includes("assets")) {
-      console.log("assets is ok");
+      console.log("assets are ok");
       assets_are_ready = true;
     }
     fs.unlinkSync(dest_path + "/" + fileName);
@@ -456,7 +456,7 @@ function verifyJava() {
 function verifyAssets() {
   if (!fs.existsSync(minecraft_path + "/assets/indexes")) {
     if (!fs.existsSync(minecraft_path + "/assets" + "/assets.zip")) {
-      console.log("assets is missing | downloading assets");
+      console.log("assets are missing | downloading assets");
 
       fs.mkdirSync(minecraft_path + "/assets");
 
@@ -476,7 +476,7 @@ function verifyAssets() {
       unzipFiles(minecraft_path + "/assets", "assets.zip");
     }
   } else {
-    console.log("assets is ok");
+    console.log("assets are ok");
     assets_are_ready = true;
   }
 }
