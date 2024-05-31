@@ -1,0 +1,5 @@
+Logging started at 2024-05-31T14:49:15.872367700Z
+[authlib-injector] [INFO] Version: 1.2.5
+[authlib-injector] [INFO] Authentication server: https://ely.by
+[authlib-injector] [INFO] Redirect to: https://account.ely.by/api/authlib-injector
+[authlib-injector] [INFO] Disabled Mojang namespace

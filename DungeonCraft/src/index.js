@@ -79,6 +79,7 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
+<<<<<<< Updated upstream
 const createNewWindow = (windowName, windWidth, windHeight, url) =>
   {
     windowName = new BrowserWindow({
@@ -100,6 +101,21 @@ const createNewWindow = (windowName, windWidth, windHeight, url) =>
   
     windowName.hide();
   };
+=======
+const createNewWindow = (windowName, windWidth, windHeight, url) => {
+  windowName = new BrowserWindow({
+    parent: mainWindow,
+    modal: true,
+    width: windWidth,
+    height: windHeight,
+    frame: false,
+    //resizable: false,
+    enableRemoteModule: true,
+    webPreferences: {
+      nodeIntegration: true,
+    },
+  });
+>>>>>>> Stashed changes
 
 const createWindows = () =>{
     let settingsWindow = 'settingsWindow';
@@ -121,6 +137,23 @@ const createWindows = () =>{
 
 app.on('ready', createWindows);
 
+<<<<<<< Updated upstream
+=======
+  let errorPassWindow = "errorPassWindow";
+
+  createNewWindow(
+    errorPassWindow,
+    512,
+    544,
+    `file://${__dirname}/error_pass.html`
+  );
+
+  let loadingWindow = "loadingWindow";
+  createNewWindow(loadingWindow, 512, 512, `file://${__dirname}/loading.html`);
+};
+
+app.on("ready", createWindows);
+>>>>>>> Stashed changes
 
 function createLauncherDir() {
   if (!fs.existsSync(appdata_path + "/.dungeoncraft")) {
