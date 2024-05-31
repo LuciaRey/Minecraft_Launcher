@@ -78,6 +78,6 @@ function writeValue(file, data) {
 
 function closeWindow() {
   if (nickname.value !== "") {
-    ipc.send("close_window", 3);
+    ipc.send("window_actions", ["close", 3]);
   }
 }

@@ -15,7 +15,6 @@
     background-position: center;
 }
 
-
 .loaded_hiding .preloader {
     transition: 0.3s opacity;
     opacity: 0;
@@ -26,12 +25,12 @@
 }
 
 body {
-    background-color: rgb(34, 34, 56);
+    background-color: rgba(10, 10, 10, 0.897);
     font: 18px/1.5;
     font-family: "Roboto", sans-serif;
     font-weight: 400;
     font-style: normal;
-    color: #c4c3f4;
+    color: rgb(230, 230, 230);
     overflow-y: hidden;
     margin: 0;
 }
@@ -41,7 +40,7 @@ body {
     position: fixed;
     height: 24px;
     width: 100%;
-    background: rgb(18, 15, 31);
+    background: rgba(30, 30, 30, 0.897);
     padding: 4px;
     color:#c4c3f4;
     top: 0px;
@@ -100,7 +99,7 @@ display: none;
 }
 
 #min-button {
-    grid-column: 1;
+    grid-column: 2;
 }
 
 #close-button {
@@ -114,8 +113,8 @@ display: none;
 }
 
 input {
-    color: #c4c3f4;
-    background-color:rgb(35, 35, 47);
+    color: rgb(230, 230, 230);
+    background-color:rgb(32, 32, 32);
     border-top: none;
     border-left: none;
     border-right: none;
@@ -128,17 +127,29 @@ input {
     margin: 15px auto 20px;
     padding: 20px 15px 0;
     text-align: center;
-
     border: 1px solid #7b7b7b;
     border-radius: 5px;
+    font-size: 24px;
+    font-family: 'dimkin', woff;
+    font-weight: bold;
+    letter-spacing: 1px;
+    background-color: rgba(59, 59, 59, 0.397); /* Цвет фона */
+    text-shadow: 2px 2px 4px black;
+    color: rgb(230, 230, 230);
 }
-
+.authfieldset{
+    background-image: url("./images/Auth.jpg");
+    height: 512px;
+    width: 512px;
+    top: 0;
+    position: absolute;
+}
 .authfieldset fieldset{
     width: 260px;
     margin: 90px auto;
-    padding: 20px 15px 0;
+    padding: 20px 15px ;
     text-align: center;
-
+    background-color: rgba(126, 126, 126, 0.568); /* Цвет фона */
     border: 1px solid #7b7b7b;
     border-radius: 5px;
 }
@@ -161,21 +172,25 @@ button {
     padding: 10px 24px;
     border: none;
     border-radius: 5px;
-
-    color: #a8a7d6;
+    font-size: 30px;
+    font-family: 'dimkin', woff;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: rgb(230, 230, 230);
     font-weight: bold;
     font-size: large;
 
     background: radial-gradient(
-        rgb(21, 16, 71),
-        rgb(16, 13, 46)
+        rgb(58, 58, 58),
+        rgb(26, 26, 26)
     );
 
     cursor: pointer;
 }
 
+
 button:hover {
-    box-shadow: 0 0 15px rgba(40, 29, 137, 0.8);
+    box-shadow: 0 0 15px rgba(108, 108, 108, 0.8);
 }
 
 .settingsButton {
@@ -200,7 +215,21 @@ button:hover {
 }
 
 .settingsIndexButton:hover {
-    box-shadow: 0 0 15px rgba(20, 19, 29, 0.8);
+    box-shadow: 0 0 15px rgba(108, 108, 108, 0.8);
+}
+
+.authfieldset legend { 
+    font-size: 30px;
+    font-family: 'dimkin', woff;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.authfieldset label { 
+    font-size: 22px;
+    font-family: 'dimkin', woff;
+    font-weight: bold;
+    letter-spacing: 1px;
 }
 
 .play {
@@ -218,8 +247,53 @@ p {
     margin: 0 0 10px;
 }
 
+.error a{
+    font-size: 24px;
+    font-family: 'dimkin', woff;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 2px black;
+    text-align: center;
+    position: absolute; 
+    left: 15%;
+    top: 40%;
+    color: rgb(230, 230, 230);
+}
+.error h4{
+    font-size: 60px;
+    font-family: 'GTA', woff;
+    margin: 200px auto;
+    text-shadow: 2px 2px 4px black;
+    letter-spacing: 2px;
+
+}
 .error {
-    margin: 90px auto;
+    background-image: url("./images/pass.png");
+    margin: 32px auto;
     text-align: center;
     text-decoration: none;
+    height: 512px;
+    width: 512px;
+    top: 0;
+    position: absolute;
 }
+
+@font-face {
+    font-family: 'GTA'; /* Ваше название шрифта */
+    src: url('./fonts/GTA.ttf') format('woff');
+    font-weight: normal; /* Начертание по умолчанию */
+    font-style: normal;
+  }
+
+@font-face {
+    font-family: 'minecraft'; /* Ваше название шрифта */
+    src: url('./fonts/minecraft.ttf') format('woff');
+    font-weight: normal; /* Начертание по умолчанию */
+    font-style: normal;
+  }
+
+@font-face {
+    font-family: 'dimkin'; /* Ваше название шрифта */
+    src: url('./fonts/Dimkin.ttf') format('woff');
+    font-weight: normal; /* Начертание по умолчанию */
+    font-style: normal;
+  }

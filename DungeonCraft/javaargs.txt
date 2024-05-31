@@ -1,1 +1,0 @@
-java -Xmx4G -Xmn196M -XX:+UseConcMarkSweepGC -jar server.jar

@@ -1,5 +1,4 @@
 const fs = require("fs");
-const { shell } = require("electron");
 const { app, BrowserWindow } = require("electron");
 const extract = require("extract-zip");
 const ipcMain = require("electron").ipcMain;
@@ -16,7 +15,7 @@ var minecraft_path = appdata_path + "/.dungeoncraft/dungeoncraft";
 var base_path = appdata_path + "/.dungeoncraft/";
 var java_path = base_path + "meta/java";
 
-let meta_is_ready = false;
+let assets_are_ready = false;
 let java_is_ready = false;
 let files_are_ready = false;
 let game_is_ready = false;
@@ -92,7 +91,7 @@ const createNewWindow = (windowName, windWidth, windHeight, url) => {
     width: windWidth,
     height: windHeight,
     frame: false,
-    //resizable: false,
+    resizable: false,
     enableRemoteModule: true,
     webPreferences: {
       nodeIntegration: true,
@@ -118,14 +117,14 @@ const createWindows = () => {
 
   let authWindow = "authWindow";
 
-  createNewWindow(authWindow, 400, 300, `file://${__dirname}/auth.html`);
+  createNewWindow(authWindow, 512, 512, `file://${__dirname}/auth.html`);
 
   let errorNickWindow = "errorNickWindow";
 
   createNewWindow(
     errorNickWindow,
-    400,
-    300,
+    512,
+    544,
     `file://${__dirname}/error_nick.html`
   );
 
@@ -133,8 +132,8 @@ const createWindows = () => {
 
   createNewWindow(
     errorPassWindow,
-    400,
-    300,
+    512,
+    544,
     `file://${__dirname}/error_pass.html`
   );
 
@@ -213,10 +212,13 @@ function checkJavaArgs() {
 app.on("ready", checkJavaArgs);
 
 function handleTitleBarActions(args) {
-  if (args === 3) BrowserWindow.fromId(2).reload();
-
-  if (args === 1) app.quit();
-  else BrowserWindow.fromId(args).hide();
+  if (args[0] === "close") {
+    if (args[1] === 3) BrowserWindow.fromId(2).reload();
+    if (args[1] === 1 || args[1] === 6) app.quit();
+    else BrowserWindow.fromId(args[1]).hide();
+  } else if (args[0] === "minimize") {
+    BrowserWindow.fromId(args[1]).minimize();
+  }
 }
 
 function errorActions(args) {
@@ -237,7 +239,7 @@ ipcMain.on("error", (event, arg) => {
   errorActions(arg);
 });
 
-ipcMain.on("close_window", (event, args) => {
+ipcMain.on("window_actions", (event, args) => {
   handleTitleBarActions(args);
 });
 
@@ -310,8 +312,6 @@ function verifyFiles(src_path, dest_path, server_url) {
             y = "";
           }
 
-          //sleep(5);
-
           const dl = new DownloaderHelper(server_url + x, dest_path + y);
 
           console.log("Downloading file " + x);
@@ -376,13 +376,13 @@ async function unzipFiles(dest_path, fileName) {
     if (fileName.includes("jdk")) {
       console.log("java is ok");
       java_is_ready = true;
-    } else if (fileName.includes("meta")) {
-      console.log("meta is ok");
-      meta_is_ready = true;
+    } else if (fileName.includes("assets")) {
+      console.log("assets is ok");
+      assets_are_ready = true;
     }
     fs.unlinkSync(dest_path + "/" + fileName);
   } catch (err) {
-    // handle any errors
+    console.log(err);
   }
 }
 
@@ -405,11 +405,7 @@ let files = giveMeFiles(serversrc_path, "/");
 let serverfiles = [];
 
 for (var x of files) {
-  if (
-    x.includes("datapacks") ||
-    x.includes("mods") ||
-    x.includes("1.19.2-forge-43.3.13.j")
-  ) {
+  if (x.includes("libraries") || x.includes("mods") || x.includes("versions")) {
     serverfiles.push(x);
   }
 }
@@ -450,32 +446,29 @@ function verifyJava() {
   }
 }
 
-function verifyMeta() {
-  if (
-    !fs.existsSync(minecraft_path + "/assets") ||
-    !fs.existsSync(minecraft_path + "/libraries")
-  ) {
-    if (!fs.existsSync(minecraft_path + "/meta.zip")) {
-      console.log("meta is missing | downloading meta");
+function verifyAssets() {
+  if (!fs.existsSync(minecraft_path + "/assets")) {
+    if (!fs.existsSync(minecraft_path + "/assets.zip")) {
+      console.log("assets is missing | downloading assets");
 
       const dl = new DownloaderHelper(
-        "https://drive.usercontent.google.com/download?id=1MQBHRowvgvXaiv5CKnwUm5bCDiBTZaqp&export=download&authuser=0&confirm=t&uuid=872386ec-e79b-4e79-9c45-3347659754c8&at=APZUnTWivggE2vXHAOn8jvAkCk8V:1716995495651",
+        "https://drive.usercontent.google.com/download?id=1NKCw1p4v3ZiNZKqpQ3ruu3q2BOpmIlvo&export=download&authuser=0&confirm=t&uuid=24f21176-93eb-4bce-b176-7834831e5cde&at=APZUnTUDhrYnoMIk1fUNVIEGUDV_:1717157136458",
         minecraft_path
       );
 
       dl.on("end", () => {
-        console.log("Download meta.zip complete");
-        unzipFiles(minecraft_path, "meta.zip");
+        console.log("Download assets.zip complete");
+        unzipFiles(minecraft_path, "assets.zip");
       });
 
-      dl.on("error", (err) => console.log("Download meta.zip Failed", err));
+      dl.on("error", (err) => console.log("Download assets.zip Failed", err));
       dl.start().catch((err) => console.error(err));
     } else {
-      unzipFiles(minecraft_path, "meta.zip");
+      unzipFiles(minecraft_path, "assets.zip");
     }
   } else {
-    console.log("meta is ok");
-    meta_is_ready = true;
+    console.log("assets is ok");
+    assets_are_ready = true;
   }
 }
 
@@ -483,7 +476,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function isGameReady() {
   while (!game_is_ready) {
-    if (java_is_ready && meta_is_ready && files_are_ready) {
+    if (java_is_ready && assets_are_ready && files_are_ready) {
       console.log("launching game");
       launchingGame();
       game_is_ready = true;
@@ -512,7 +505,7 @@ function launchingGame() {
           let filename = "" + java_path + "/bin/javaw.exe";
           filename = filename.toString().replace(/\\/g, "/");
 
-          java_args = java_args.toString().replace(/ /g, " !");
+          java_args = java_args.toString().replace(/ /g, " ");
 
           fs.readFile(
             minecraft_path +
@@ -567,54 +560,20 @@ function launchingGame() {
                     cp = cp.toString().replace(/\\/g, "/");
                     cp = cp.toString().replace(/,/g, "");
 
-                    cp = cp.split(";");
-
-                    let a = giveMeFiles(
-                      minecraft_path + "/libraries",
-                      minecraft_path + "/libraries/"
-                    );
-                    a = a.join(" ");
-                    a = a.toString().replace(/\\/g, "/");
-                    a = a.split(" ");
-
-                    let mycp = [];
-                    for (var x of a) {
-                      if (x.includes("windows")) {
-                        if (x.includes("windows.jar")) {
-                          mycp.push(x);
-                        }
-                      } else if (!x.includes("macos") && !x.includes("linux")) {
-                        mycp.push(x);
-                      }
-                    }
-
-                    console.log(getUncommonElements(cp, a));
-                    //console.log(getUncommonElements(a, cp));
-
-                    mycp = mycp.join(";") + ";";
-
-                    //console.log(mycp);
-
-                    //console.log(getUncommonElements(cp, a));
-
-                    cp = cp.toString().replace(/,/g, ";");
-
-                    let shortcp = minecraft_path + "/libraries/forge.jar;";
-
                     let command =
                       "-javaagent:" +
                       minecraft_path +
-                      "/libraries/com/mojang/authlib/3.11.49/authlib-injector-1.2.5.jar=ely.by !-XX:+UnlockExperimentalVMOptions !" +
+                      "/libraries/com/mojang/authlib/3.11.49/authlib-injector-1.2.5.jar=ely.by -XX:+UnlockExperimentalVMOptions " +
                       java_args +
-                      " !-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump !-Djava.library.path=" +
+                      " -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -Djava.library.path=" +
                       minecraft_path +
-                      "/natives !-Dminecraft.launcher.brand=dungeoncraft !-Dminecraft.launcher.version=1.2.3 !-cp !" +
+                      "/natives -Dminecraft.launcher.brand=dungeoncraft -Dminecraft.launcher.version=1.2.3 -cp " +
                       cp +
                       minecraft_path +
-                      "/versions/1.19.2/1.19.2.jar !-Djava.net.preferIPv6Addresses=system !-DignoreList=bootstraplauncher,securejarhandler,asm-commons,asm-util,asm-analysis,asm-tree,asm,JarJarFileSystems,client-extra,fmlcore,javafmllanguage,lowcodelanguage,mclanguage,forge-,1.19.2.jar " +
-                      "!-DmergeModules=jna-5.10.0.jar,jna-platform-5.10.0.jar !-DlibraryDirectory=" +
+                      "/versions/1.19.2/1.19.2.jar -Djava.net.preferIPv6Addresses=system -DignoreList=bootstraplauncher,securejarhandler,asm-commons,asm-util,asm-analysis,asm-tree,asm,JarJarFileSystems,client-extra,fmlcore,javafmllanguage,lowcodelanguage,mclanguage,forge-,1.19.2.jar " +
+                      "-DmergeModules=jna-5.10.0.jar,jna-platform-5.10.0.jar -DlibraryDirectory=" +
                       minecraft_path +
-                      "/libraries !-p !" +
+                      "/libraries -p " +
                       minecraft_path +
                       "/libraries/cpw/mods/bootstraplauncher/1.1.2/bootstraplauncher-1.1.2.jar;" +
                       minecraft_path +
@@ -630,30 +589,31 @@ function launchingGame() {
                       minecraft_path +
                       "/libraries/org/ow2/asm/asm/9.7/asm-9.7.jar;" +
                       minecraft_path +
-                      "/libraries/net/minecraftforge/JarJarFileSystems/0.3.16/JarJarFileSystems-0.3.16.jar !--add-modules !ALL-MODULE-PATH " +
-                      "!--add-opens !java.base/java.util.jar=cpw.mods.securejarhandler !--add-opens !java.base/java.lang.invoke=cpw.mods.securejarhandler !--add-exports !java.base/sun.security.util=cpw.mods.securejarhandler !--add-exports !jdk.naming.dns/com.sun.jndi.dns=java.naming !cpw.mods.bootstraplauncher.BootstrapLauncher " +
-                      "!--username !" +
+                      "/libraries/net/minecraftforge/JarJarFileSystems/0.3.16/JarJarFileSystems-0.3.16.jar --add-modules ALL-MODULE-PATH " +
+                      "--add-opens java.base/java.util.jar=cpw.mods.securejarhandler --add-opens java.base/java.lang.invoke=cpw.mods.securejarhandler --add-exports java.base/sun.security.util=cpw.mods.securejarhandler --add-exports jdk.naming.dns/com.sun.jndi.dns=java.naming cpw.mods.bootstraplauncher.BootstrapLauncher " +
+                      "--username " +
                       nickname +
-                      ' !--version !"Forge 1.19.2" !--gameDir !' +
+                      " --version forge-1.19.2 --gameDir " +
                       minecraft_path +
-                      "/ !--assetsDir !" +
+                      "/ --assetsDir " +
                       minecraft_path +
-                      "/assets !--assetIndex !1.19 !--uuid !" +
+                      "/assets --assetIndex 1.19 --uuid " +
                       uuid +
-                      " !--accessToken !" +
+                      " --accessToken " +
                       accessToken +
-                      ' !--clientId !"" !--xuid !"" !--userType !legacy !--versionType !modified !--width !925 !--height !530 !--launchTarget !forgeclient !--fml.forgeVersion !43.3.13 !--fml.mcVersion !1.19.2 !--fml.forgeGroup !net.minecraftforge !--fml.mcpVersion !20220805.130853';
+                      ' --clientId "" --xuid "" --userType legacy --versionType modified --width 925 --height 530 --launchTarget forgeclient --fml.forgeVersion 43.3.13 --fml.mcVersion 1.19.2 --fml.forgeGroup net.minecraftforge --fml.mcpVersion 20220805.130853';
                     command = command.toString().replace(/\\/g, "/");
 
-                    command = command.split(" !");
+                    console.log("launching minecraft with options " + command);
+
+                    command = command.split(" ");
 
                     const launch = childProcess.spawn(filename, command);
 
-                    command = command.join(" ");
-
-                    console.log(command);
-
                     launch.stdout.on("data", (data) => {
+                      if (data.includes("Stopping!")) {
+                        app.quit();
+                      }
                       console.log(data.toString());
                     });
 
@@ -674,8 +634,11 @@ function launchingGame() {
 ipcMain.on("launch", (event, arg) => {
   console.log("Launching minecraft");
 
+  BrowserWindow.fromId(1).hide();
+  BrowserWindow.fromId(6).show();
+
   verifyJava();
-  verifyMeta();
+  verifyAssets();
 
   let server_url = "https://luciarey.github.io/dungeoncraft/dungeoncraft";
 
@@ -697,3 +660,5 @@ ipcMain.on("launch", (event, arg) => {
 });
 
 //  https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.zip  <-- java 17 installation
+
+//[16:09:04] [Render thread/INFO] [minecraft/Minecraft]: Stopping!

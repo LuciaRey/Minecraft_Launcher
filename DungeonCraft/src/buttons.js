@@ -2,7 +2,11 @@ const ipc = require("electron").ipcRenderer;
 const fs = require("fs");
 
 document.getElementById("close-button").addEventListener("click", (event) => {
-  ipc.send("close_window", 1);
+  ipc.send("window_actions", ["close", 1]);
+});
+
+document.getElementById("min-button").addEventListener("click", (event) => {
+  ipc.send("window_actions", ["minimize", 1]);
 });
 
 function settings() {

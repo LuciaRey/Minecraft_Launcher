@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="./style.css">
-    <meta charset="utf-8">
+    <link rel="stylesheet" href="./style.css" />
+    <meta charset="utf-8" />
     <title>DungeonCraft</title>
   </head>
   <body>
@@ -13,9 +13,13 @@
         </div>
         <div id="window-controls">
           <div class="button window-hover-close" id="close-button">
-            <img class="icon" id="close" alt="close"
+            <img
+              class="icon"
+              id="close"
+              alt="close"
               srcset="./images/close-w-10.png"
-              draggable="false" />
+              draggable="false"
+            />
           </div>
         </div>
       </div>
@@ -23,22 +27,24 @@
     <div id="preloader" class="preloader"></div>
     <script>
       window.onload = function () {
-        document.body.classList.add('loaded_hiding');
+        document.body.classList.add("loaded_hiding");
         window.setTimeout(function () {
-          document.body.classList.add('loaded');
-          document.body.classList.remove('loaded_hiding');
+          document.body.classList.add("loaded");
+          document.body.classList.remove("loaded_hiding");
         }, 500);
-      }
+      };
     </script>
     <div id="main">
-        <div class="error">
-            <h4>Введен неверный пароль</h4>
-        </div>
+      <div class="error">
+        <h4>Введен неверный пароль</h4>
+      </div>
     </div>
     <script>
-        const ipc = require('electron').ipcRenderer;
-        document.getElementById('close-button').addEventListener("click", event => {
-            ipc.send('close_window', 5);
+      const ipc = require("electron").ipcRenderer;
+      document
+        .getElementById("close-button")
+        .addEventListener("click", (event) => {
+          ipc.send("window_actions", ["close", 5]);
         });
     </script>
   </body>
