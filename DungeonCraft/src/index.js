@@ -108,7 +108,7 @@ const createWindows = () =>{
 
     let authWindow = 'authWindow';
 
-    createNewWindow(authWindow, 400, 300, `file://${__dirname}/auth.html`);
+    createNewWindow(authWindow, 512, 512, `file://${__dirname}/auth.html`);
 
     let errorNickWindow = 'errorNickWindow';
 
