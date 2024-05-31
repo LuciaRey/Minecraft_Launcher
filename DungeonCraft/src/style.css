@@ -282,18 +282,50 @@ p {
     src: url('./fonts/GTA.ttf') format('woff');
     font-weight: normal; /* Начертание по умолчанию */
     font-style: normal;
-  }
+}
 
 @font-face {
     font-family: 'minecraft'; /* Ваше название шрифта */
     src: url('./fonts/minecraft.ttf') format('woff');
     font-weight: normal; /* Начертание по умолчанию */
     font-style: normal;
-  }
+}
 
 @font-face {
     font-family: 'dimkin'; /* Ваше название шрифта */
     src: url('./fonts/Dimkin.ttf') format('woff');
     font-weight: normal; /* Начертание по умолчанию */
     font-style: normal;
+}
+
+#progress-bar {
+    z-index: 2;
+    width: 456px;
+    height: 10px;
+    background-color: #eee;
+    border-radius: 5px;
+    margin-top: 450px;
+    overflow: hidden; /* To hide the excess of progress-fill */
+    position: absolute;
+    left: 28px;
+}
+  
+#progress-fill {
+    height: 100%;
+    background-color: #2b0abb;
+    width: 0%; /* Initially 0% filled */
+    transition: width 60s ease; /* Optional smooth transition */
+    animation: pulse 1.5s ease-in-out infinite; /* Add animation */
+}
+
+@keyframes pulse {
+  0% {
+    width: 0%;
   }
+  50% {
+    width: 98%; /* Adjust pulsing width */
+  }
+  100% {
+    width: 0%;
+  }
+}

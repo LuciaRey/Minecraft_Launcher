@@ -1,16 +1,22 @@
 const fs = require("fs");
-const { app, BrowserWindow } = require("electron");
 const extract = require("extract-zip");
 const ipcMain = require("electron").ipcMain;
 const { nativeTheme } = require("electron");
 const childProcess = require("child_process");
+const { app, BrowserWindow } = require("electron");
 const { DownloaderHelper } = require("node-downloader-helper");
+
+// Handle creating/removing shortcuts on Windows when installing/uninstalling.
+if (require("electron-squirrel-startup")) {
+  // eslint-disable-line global-require
+  app.quit();
+}
 
 var appdata_path =
   process.env.APPDATA ||
-  (process.platform == "darwin"
-    ? process.env.HOME + "/Library/Preferences"
-    : process.env.HOME + "/.local/share");
+  (process.platform === "darwin"
+    ? process.env.HOME + "/Library/minercraft"
+    : process.env.HOME + "/minecraft");
 var minecraft_path = appdata_path + "/.dungeoncraft/dungeoncraft";
 var base_path = appdata_path + "/.dungeoncraft/";
 var java_path = base_path + "meta/java";
@@ -21,12 +27,6 @@ let files_are_ready = false;
 let game_is_ready = false;
 
 nativeTheme.themeSource = "dark";
-
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require("electron-squirrel-startup")) {
-  // eslint-disable-line global-require
-  app.quit();
-}
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -139,12 +139,18 @@ const createWindows = () => {
 
   let loadingWindow = "loadingWindow";
 
-  createNewWindow(loadingWindow, 710, 400, `file://${__dirname}/loading.html`);
+  createNewWindow(loadingWindow, 512, 512, `file://${__dirname}/loading.html`);
 };
 
 app.on("ready", createWindows);
 
+console.log(`This platform is ` + process.platform);
+
 function createLauncherDir() {
+  if (!fs.existsSync(appdata_path)) {
+    fs.mkdirSync(appdata_path);
+  }
+
   if (!fs.existsSync(appdata_path + "/.dungeoncraft")) {
     fs.mkdirSync(appdata_path + "/.dungeoncraft");
   }
@@ -193,7 +199,14 @@ app.on("ready", isAuthorized);
 function checkJavaArgs() {
   if (!fs.existsSync("./java_args")) {
     console.log("java_args is missing | created java_args");
-    fs.writeFileSync("./java_args", "-Xms2048M -Xmx8192M");
+    let args = "-Xms2048M -Xmx8192M";
+    if (process.platform === "win32") {
+      args =
+        "-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -Xms2048M -Xmx8192M";
+    } else if (process.platform === "darwin") {
+      args = "-XstartOnFirstThread -Xms2048M -Xmx8192M";
+    }
+    fs.writeFileSync("./java_args", args);
   } else {
     fs.readFile("./java_args", "utf8", function (err, buffer) {
       if (err) {
@@ -202,7 +215,14 @@ function checkJavaArgs() {
         console.log(buffer);
         if (buffer === "") {
           console.log("java_args is empty | created java_args");
-          fs.writeFileSync("./java_args", "-Xms2048M -Xmx8192M");
+          let args = "-Xms2048M -Xmx8192M";
+          if (process.platform === "win32") {
+            args =
+              "-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -Xms2048M -Xmx8192M";
+          } else if (process.platform === "darwin") {
+            args = "-XstartOnFirstThread -Xms2048M -Xmx8192M";
+          }
+          fs.writeFileSync("./java_args", args);
         }
       }
     });
@@ -290,9 +310,28 @@ function verifyFiles(src_path, dest_path, server_url) {
     }
     filesOnServer = filesOnServer.split(",");
     let filesOnClient = giveMeFiles(dest_path, "/", "");
+    let filesForMyPlatform = [];
+    for (var x of filesOnServer) {
+      if (x.includes("windows")) {
+        if (
+          (process.platform === "win32" && x.includes("windows.jar")) ||
+          x.includes("mods")
+        ) {
+          filesForMyPlatform.push(x);
+        }
+      } else if (x.includes("linux")) {
+        if (process.platform === "linux" && x.includes("linux.jar")) {
+          filesForMyPlatform.push(x);
+        }
+      } else if (x.includes("macos")) {
+        if (process.platform === "darwin" && x.includes("macos-arm64.jar")) {
+          filesForMyPlatform.push(x);
+        }
+      } else filesForMyPlatform.push(x);
+    }
 
-    if (filesOnServer !== filesOnClient) {
-      let res = getUncommonElements(filesOnServer, filesOnClient);
+    if (filesForMyPlatform !== filesOnClient) {
+      let res = getUncommonElements(filesForMyPlatform, filesOnClient);
       let downloaded_files = [];
 
       if (res.length !== 0) {
@@ -386,38 +425,6 @@ async function unzipFiles(dest_path, fileName) {
   }
 }
 
-//Создание server.txt
-/*
-let serversrc_path =
-  "D:/Documents/GitHub/LuciaRey.github.io/dungeoncraft/dungeoncraft";
-
-if (
-  fs.existsSync(
-    "D:/Documents/GitHub/LuciaRey.github.io/dungeoncraft/dungeoncraft/server.txt"
-  )
-)
-  fs.unlinkSync(
-    "D:/Documents/GitHub/LuciaRey.github.io/dungeoncraft/dungeoncraft/server.txt"
-  );
-
-let files = giveMeFiles(serversrc_path, "/");
-
-let serverfiles = [];
-
-for (var x of files) {
-  if (x.includes("libraries") || x.includes("mods") || x.includes("versions")) {
-    serverfiles.push(x);
-  }
-}
-fs.writeFileSync(
-  "D:/Documents/GitHub/LuciaRey.github.io/dungeoncraft/dungeoncraft/server.txt",
-  serverfiles
-);
-console.log(
-  "server.txt was created in D:/Documents/GitHub/LuciaRey.github.io/dungeoncraft/dungeoncraft/"
-);
-*/
-
 function verifyJava() {
   if (!fs.existsSync(java_path + "/jdk-17.0.11")) {
     if (!fs.existsSync(java_path + "/jdk-17_windows-x64_bin.zip")) {
@@ -447,24 +454,26 @@ function verifyJava() {
 }
 
 function verifyAssets() {
-  if (!fs.existsSync(minecraft_path + "/assets")) {
-    if (!fs.existsSync(minecraft_path + "/assets.zip")) {
+  if (!fs.existsSync(minecraft_path + "/assets/indexes")) {
+    if (!fs.existsSync(minecraft_path + "/assets" + "/assets.zip")) {
       console.log("assets is missing | downloading assets");
+
+      fs.mkdirSync(minecraft_path + "/assets");
 
       const dl = new DownloaderHelper(
         "https://drive.usercontent.google.com/download?id=1NKCw1p4v3ZiNZKqpQ3ruu3q2BOpmIlvo&export=download&authuser=0&confirm=t&uuid=24f21176-93eb-4bce-b176-7834831e5cde&at=APZUnTUDhrYnoMIk1fUNVIEGUDV_:1717157136458",
-        minecraft_path
+        minecraft_path + "/assets"
       );
 
       dl.on("end", () => {
         console.log("Download assets.zip complete");
-        unzipFiles(minecraft_path, "assets.zip");
+        unzipFiles(minecraft_path + "/assets", "assets.zip");
       });
 
       dl.on("error", (err) => console.log("Download assets.zip Failed", err));
       dl.start().catch((err) => console.error(err));
     } else {
-      unzipFiles(minecraft_path, "assets.zip");
+      unzipFiles(minecraft_path + "/assets", "assets.zip");
     }
   } else {
     console.log("assets is ok");
@@ -486,6 +495,11 @@ async function isGameReady() {
 }
 
 function launchingGame() {
+  let platformSep = ";";
+  if (process.platform !== "win32") {
+    platformSep = ":";
+  }
+
   fs.readFile("./launcher_data", "utf8", function (err, buffer) {
     if (err) {
       console.log("Cant read launcher_data");
@@ -525,7 +539,7 @@ function launchingGame() {
                       json_forge["libraries"][i]["downloads"]["artifact"][
                         "path"
                       ] +
-                      ";"
+                      platformSep
                   );
                 }
 
@@ -547,13 +561,29 @@ function launchingGame() {
                       if (json_1_19_2["libraries"][i].hasOwnProperty("rules")) {
                         let platform =
                           json_1_19_2["libraries"][i]["rules"][0]["os"]["name"];
-                        if (
-                          platform === "windows" &&
-                          path.includes("windows.jar")
+                        if (process.platform === "win32") {
+                          if (
+                            platform === "windows" &&
+                            path.includes("windows.jar")
+                          ) {
+                            cp1.push(path + platformSep);
+                          }
+                        } else if (process.platform === "linux") {
+                          if (
+                            platform === process.platform &&
+                            path.includes("linux.jar")
+                          ) {
+                            cp1.push(path + platformSep);
+                          }
+                        } else if (
+                          process.platform === "darwin" &&
+                          path.includes("macos-arm64.jar")
                         ) {
-                          cp1.push(path + ";");
+                          if (platform === "osx") {
+                            cp1.push(path + platformSep);
+                          }
                         }
-                      } else cp1.push(path + ";");
+                      } else cp1.push(path + platformSep);
                     }
 
                     let cp = cp1.concat(cp2);
@@ -565,7 +595,7 @@ function launchingGame() {
                       minecraft_path +
                       "/libraries/com/mojang/authlib/3.11.49/authlib-injector-1.2.5.jar=ely.by -XX:+UnlockExperimentalVMOptions " +
                       java_args +
-                      " -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -Djava.library.path=" +
+                      " -Djava.library.path=" +
                       minecraft_path +
                       "/natives -Dminecraft.launcher.brand=dungeoncraft -Dminecraft.launcher.version=1.2.3 -cp " +
                       cp +
@@ -575,19 +605,26 @@ function launchingGame() {
                       minecraft_path +
                       "/libraries -p " +
                       minecraft_path +
-                      "/libraries/cpw/mods/bootstraplauncher/1.1.2/bootstraplauncher-1.1.2.jar;" +
+                      "/libraries/cpw/mods/bootstraplauncher/1.1.2/bootstraplauncher-1.1.2.jar" +
+                      platformSep +
                       minecraft_path +
-                      "/libraries/cpw/mods/securejarhandler/2.1.4/securejarhandler-2.1.4.jar;" +
+                      "/libraries/cpw/mods/securejarhandler/2.1.4/securejarhandler-2.1.4.jar" +
+                      platformSep +
                       minecraft_path +
-                      "/libraries/org/ow2/asm/asm-commons/9.7/asm-commons-9.7.jar;" +
+                      "/libraries/org/ow2/asm/asm-commons/9.7/asm-commons-9.7.jar" +
+                      platformSep +
                       minecraft_path +
-                      "/libraries/org/ow2/asm/asm-util/9.7/asm-util-9.7.jar;" +
+                      "/libraries/org/ow2/asm/asm-util/9.7/asm-util-9.7.jar" +
+                      platformSep +
                       minecraft_path +
-                      "/libraries/org/ow2/asm/asm-analysis/9.7/asm-analysis-9.7.jar;" +
+                      "/libraries/org/ow2/asm/asm-analysis/9.7/asm-analysis-9.7.jar" +
+                      platformSep +
                       minecraft_path +
-                      "/libraries/org/ow2/asm/asm-tree/9.7/asm-tree-9.7.jar;" +
+                      "/libraries/org/ow2/asm/asm-tree/9.7/asm-tree-9.7.jar" +
+                      platformSep +
                       minecraft_path +
-                      "/libraries/org/ow2/asm/asm/9.7/asm-9.7.jar;" +
+                      "/libraries/org/ow2/asm/asm/9.7/asm-9.7.jar" +
+                      platformSep +
                       minecraft_path +
                       "/libraries/net/minecraftforge/JarJarFileSystems/0.3.16/JarJarFileSystems-0.3.16.jar --add-modules ALL-MODULE-PATH " +
                       "--add-opens java.base/java.util.jar=cpw.mods.securejarhandler --add-opens java.base/java.lang.invoke=cpw.mods.securejarhandler --add-exports java.base/sun.security.util=cpw.mods.securejarhandler --add-exports jdk.naming.dns/com.sun.jndi.dns=java.naming cpw.mods.bootstraplauncher.BootstrapLauncher " +
@@ -660,5 +697,3 @@ ipcMain.on("launch", (event, arg) => {
 });
 
 //  https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.zip  <-- java 17 installation
-
-//[16:09:04] [Render thread/INFO] [minecraft/Minecraft]: Stopping!
