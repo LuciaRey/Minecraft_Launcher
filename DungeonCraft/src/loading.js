@@ -34,18 +34,7 @@ function stopPulsingAnimation() {
 // and you are downloading a file 'x'
 
 // Start the pulsing animation when the download starts
-dl.on("start", () => {
-  startPulsingAnimation();
-});
 
-// Update progress when download progresses
-dl.on("downloadProgress", (progress) => {
-  const percentage = (progress.downloaded / progress.total) * 100;
-  updateProgressBar(percentage);
-});
+startPulsingAnimation();
 
 // Stop pulsing animation and show 100% progress when download is complete
-dl.on("end", () => {
-  stopPulsingAnimation();
-  updateProgressBar(100);
-});

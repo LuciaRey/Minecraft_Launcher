@@ -651,6 +651,9 @@ function launchingGame() {
                       if (data.includes("Stopping!")) {
                         app.quit();
                       }
+                      if (data.includes("Setting user:")) {
+                        BrowserWindow.fromId(6).hide();
+                      }
                       console.log(data.toString());
                     });
 
