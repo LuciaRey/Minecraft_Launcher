@@ -298,34 +298,50 @@ p {
     font-style: normal;
 }
 
-#progress-bar {
-    z-index: 2;
-    width: 456px;
-    height: 10px;
+.progress-bar {
+    width: 400px;
+    height: 15px;
     background-color: #eee;
     border-radius: 5px;
-    margin-top: 450px;
-    overflow: hidden; /* To hide the excess of progress-fill */
+    overflow: hidden;
+    z-index: 999;
     position: absolute;
-    left: 28px;
+    top: 480px;
+    left: 50px;
 }
-  
-#progress-fill {
+
+.progress-bar .fill {
     height: 100%;
-    background-color: #2b0abb;
-    width: 0%; /* Initially 0% filled */
-    transition: width 60s ease; /* Optional smooth transition */
-    animation: pulse 1.5s ease-in-out infinite; /* Add animation */
+    background-color: #2e0cc8;
+    width: 0%; /* Start with 80% width for the pulse effect */
+    transition: width 0.5s ease-in-out;
+    animation: pulse 2.0s infinite; /* Infinite animation */
 }
 
 @keyframes pulse {
-  0% {
-    width: 0%;
-  }
-  50% {
-    width: 98%; /* Adjust pulsing width */
-  }
-  100% {
-    width: 0%;
-  }
+    0% {
+      width: 60%;
+    }
+    50% {
+      width: 90%;
+    }
+    100% {
+      width: 60%;
+    }
+}
+
+.load p {
+    font-family: 'minecraft', woff;
+    font-size: 24px;
+    z-index: 999;
+    position: relative;
+    padding: 400px 0 0 100px;
+    width: 600px;
+}
+
+.load img {
+    position: absolute;
+    width: 512px;
+    height: 512px;
+    z-index: 0;
 }

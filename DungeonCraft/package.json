@@ -1,9 +1,10 @@
 {
   "name": "dungeoncraft",
   "productName": "dungeoncraft",
-  "version": "1.0.0",
+  "version": "2.1.3",
   "description": "Minecraft Launcher",
   "main": "src/index.js",
+  "icon": "D:/Documents/GitHub/Minecraft_Launcher/DungeonCraft/src/images/icon.ico",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",

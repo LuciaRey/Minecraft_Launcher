@@ -38,7 +38,7 @@ const createWindow = () => {
     width: 710,
     height: 400,
     frame: false,
-    //resizable: false,
+    resizable: false,
     enableRemoteModule: true,
     webPreferences: {
       nodeIntegration: true,
@@ -49,7 +49,7 @@ const createWindow = () => {
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on("closed", () => {
@@ -100,7 +100,7 @@ const createNewWindow = (windowName, windWidth, windHeight, url) => {
 
   windowName.loadURL(url);
 
-  windowName.webContents.openDevTools();
+  //windowName.webContents.openDevTools();
 
   windowName.hide();
 };
@@ -139,7 +139,7 @@ const createWindows = () => {
 
   let loadingWindow = "loadingWindow";
 
-  createNewWindow(loadingWindow, 512, 512, `file://${__dirname}/loading.html`);
+  createNewWindow(loadingWindow, 512, 544, `file://${__dirname}/loading.html`);
 };
 
 app.on("ready", createWindows);
@@ -320,11 +320,17 @@ function verifyFiles(src_path, dest_path, server_url) {
           filesForMyPlatform.push(x);
         }
       } else if (x.includes("linux")) {
-        if (process.platform === "linux" && x.includes("linux.jar")) {
+        if (
+          (process.platform === "linux" && x.includes("linux.jar")) ||
+          x.includes("mods")
+        ) {
           filesForMyPlatform.push(x);
         }
       } else if (x.includes("macos")) {
-        if (process.platform === "darwin" && x.includes("macos-arm64.jar")) {
+        if (
+          (process.platform === "darwin" && x.includes("macos-arm64.jar")) ||
+          x.includes("mods")
+        ) {
           filesForMyPlatform.push(x);
         }
       } else filesForMyPlatform.push(x);
