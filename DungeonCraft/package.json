@@ -1,7 +1,7 @@
 {
   "name": "dungeoncraft",
   "productName": "DungeonCraft",
-  "version": "2.1.3",
+  "version": "3.0.0",
   "description": "Minecraft Launcher",
   "main": "src/index.js",
   "icon": "icon",
@@ -14,7 +14,7 @@
     "lint": "eslint src --color"
   },
   "keywords": [],
-  "author": "V_1nc3nt",
+  "author": "V_1nc3nt Inc.",
   "license": "MIT",
   "config": {
     "forge": {

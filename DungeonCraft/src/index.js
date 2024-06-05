@@ -152,7 +152,7 @@ const createWindows = () => {
 app.on("ready", createWindows);
 
 if (fs.existsSync("./logs/main.log")) {
-  fs.unlink("./logs/main.log");
+  fs.unlinkSync("./logs/main.log");
 }
 
 log.transports.file.resolvePathFn = () => "./logs/main.log";
