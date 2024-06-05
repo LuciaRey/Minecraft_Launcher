@@ -1,6 +1,6 @@
 {
   "name": "dungeoncraft",
-  "productName": "DungeonCraft",
+  "productName": "Dungeon Craft",
   "version": "3.0.0",
   "description": "Minecraft Launcher",
   "main": "src/index.js",
