@@ -5,6 +5,7 @@ const { nativeTheme } = require("electron");
 const childProcess = require("child_process");
 const { app, BrowserWindow } = require("electron");
 const { DownloaderHelper } = require("node-downloader-helper");
+import log from "electron-log/main";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -40,6 +41,7 @@ const createWindow = () => {
     frame: false,
     resizable: false,
     enableRemoteModule: true,
+    icon: "./images/icon.ico",
     webPreferences: {
       nodeIntegration: true,
     },
@@ -93,6 +95,7 @@ const createNewWindow = (windowName, windWidth, windHeight, url) => {
     frame: false,
     resizable: false,
     enableRemoteModule: true,
+    icon: "./images/icon.ico",
     webPreferences: {
       nodeIntegration: true,
     },
@@ -140,11 +143,21 @@ const createWindows = () => {
   let loadingWindow = "loadingWindow";
 
   createNewWindow(loadingWindow, 512, 544, `file://${__dirname}/loading.html`);
+
+  let errorWindow = "errorWindow";
+
+  createNewWindow(errorWindow, 512, 534, `file://${__dirname}/error.html`);
 };
 
 app.on("ready", createWindows);
 
-console.log(`This platform is ` + process.platform);
+if (fs.existsSync("./logs/main.log")) {
+  fs.unlink("./logs/main.log");
+}
+
+log.transports.file.resolvePathFn = () => "./logs/main.log";
+
+log.info(`This platform is ` + process.platform);
 
 function createLauncherDir() {
   if (!fs.existsSync(appdata_path)) {
@@ -176,13 +189,14 @@ createLauncherDir();
 
 const authorization = () => {
   BrowserWindow.fromId(3).show();
+  log.silly("Релиз - Завтра");
 };
 
 const isAuthorized = () => {
   if (fs.existsSync("./launcher_data")) {
     fs.readFile("./launcher_data", "utf8", function (err, buffer) {
       if (err) {
-        console.log("Cant read launcher_data");
+        log.error("Cant read launcher_data");
       } else {
         if (buffer === "") {
           authorization();
@@ -198,7 +212,7 @@ app.on("ready", isAuthorized);
 
 function checkJavaArgs() {
   if (!fs.existsSync("./java_args")) {
-    console.log("java_args is missing | created java_args");
+    log.info("java_args is missing | created java_args");
     let args = "-Xms2048M -Xmx8192M";
     if (process.platform === "win32") {
       args =
@@ -210,11 +224,11 @@ function checkJavaArgs() {
   } else {
     fs.readFile("./java_args", "utf8", function (err, buffer) {
       if (err) {
-        console.log("Cant read launcher_data");
+        log.error("Cant read launcher_data");
       } else {
-        console.log(buffer);
+        log.info(buffer);
         if (buffer === "") {
-          console.log("java_args is empty | created java_args");
+          log.info("java_args is empty | created java_args");
           let args = "-Xms2048M -Xmx8192M";
           if (process.platform === "win32") {
             args =
@@ -234,7 +248,7 @@ app.on("ready", checkJavaArgs);
 function handleTitleBarActions(args) {
   if (args[0] === "close") {
     if (args[1] === 3) BrowserWindow.fromId(2).reload();
-    if (args[1] === 1 || args[1] === 6) app.quit();
+    if (args[1] === 1 || args[1] === 6 || args[1] === 7) app.quit();
     else BrowserWindow.fromId(args[1]).hide();
   } else if (args[0] === "minimize") {
     BrowserWindow.fromId(args[1]).minimize();
@@ -305,7 +319,7 @@ function createDir(x, dest_path) {
 function verifyFiles(src_path, dest_path, server_url) {
   fs.readFile(src_path, "utf8", (err, filesOnServer) => {
     if (err) {
-      console.error(err);
+      log.error(err);
       return;
     }
     filesOnServer = filesOnServer.split(",");
@@ -359,32 +373,32 @@ function verifyFiles(src_path, dest_path, server_url) {
 
           const dl = new DownloaderHelper(server_url + x, dest_path + y);
 
-          console.log("Downloading file " + x);
+          log.info("Downloading file " + x);
 
           dl.on("end", () => {
             downloaded_files.push(x);
-            console.log(
+            log.info(
               "Downloaded file " + downloaded_files.length + " of " + res.length
             );
             if (downloaded_files.length === res.length) {
-              console.log("Files downloading complete!");
+              log.info("Files downloading complete!");
               files_are_ready = true;
               fs.unlinkSync(minecraft_path + "/server.txt");
-              console.log("files are ok");
+              log.info("files are ok");
             }
           });
 
           dl.on("error", (err) =>
-            console.log("Download Failed" + server_url + x, err)
+            log.error("Download Failed" + server_url + x, err)
           );
           dl.start().catch((err) => {
-            console.error(err);
-            console.log("Download error" + server_url + x);
+            log.error(err);
+            log.error("Download error" + server_url + x);
           });
         }
       } else {
         fs.unlinkSync(minecraft_path + "/server.txt");
-        console.log("files are ok");
+        log.info("files are ok");
         files_are_ready = true;
       }
     }
@@ -407,34 +421,35 @@ function verifyFiles(src_path, dest_path, server_url) {
         fs.unlink(dest_path + "/" + x, (err) => {
           if (err) throw err;
         });
-        console.log(x + " was deleted");
+        log.info(x + " was deleted");
       }
-    } else console.log("mods are ok");
+    } else log.info("mods are ok");
   });
 }
 
 async function unzipFiles(dest_path, fileName) {
   try {
-    console.log("Extracting " + fileName);
+    log.info("Extracting " + fileName);
     await extract(dest_path + "/" + fileName, { dir: dest_path });
-    console.log("Extraction " + fileName + " complete");
+    log.info("Extraction " + fileName + " complete");
     if (fileName.includes("jdk")) {
-      console.log("java is ok");
+      log.info("java is ok");
       java_is_ready = true;
     } else if (fileName.includes("assets")) {
-      console.log("assets are ok");
+      log.info("assets are ok");
       assets_are_ready = true;
     }
     fs.unlinkSync(dest_path + "/" + fileName);
   } catch (err) {
-    console.log(err);
+    log.error(err);
+    fs.unlinkSync(dest_path + "/" + fileName);
   }
 }
 
 function verifyJava() {
   if (!fs.existsSync(java_path + "/jdk-17.0.11")) {
     if (!fs.existsSync(java_path + "/jdk-17_windows-x64_bin.zip")) {
-      console.log("java is missing | downloading java");
+      log.info("java is missing | downloading java");
 
       const dl = new DownloaderHelper(
         "https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.zip",
@@ -442,19 +457,19 @@ function verifyJava() {
       );
 
       dl.on("end", () => {
-        console.log("Download jdk-17_windows-x64_bin.zip complete");
+        log.info("Download jdk-17_windows-x64_bin.zip complete");
         unzipFiles(java_path, "jdk-17_windows-x64_bin.zip");
       });
 
       dl.on("error", (err) =>
-        console.log("Download jdk-17_windows-x64_bin.zip Failed", err)
+        log.error("Download jdk-17_windows-x64_bin.zip Failed", err)
       );
-      dl.start().catch((err) => console.error(err));
+      dl.start().catch((err) => log.error(err));
     } else {
       unzipFiles(java_path, "jdk-17_windows-x64_bin.zip");
     }
   } else {
-    console.log("java is ok");
+    log.info("java is ok");
     java_is_ready = true;
   }
 }
@@ -462,7 +477,7 @@ function verifyJava() {
 function verifyAssets() {
   if (!fs.existsSync(minecraft_path + "/assets/indexes")) {
     if (!fs.existsSync(minecraft_path + "/assets" + "/assets.zip")) {
-      console.log("assets are missing | downloading assets");
+      log.info("assets are missing | downloading assets");
 
       fs.mkdirSync(minecraft_path + "/assets");
 
@@ -472,17 +487,17 @@ function verifyAssets() {
       );
 
       dl.on("end", () => {
-        console.log("Download assets.zip complete");
+        log.info("Download assets.zip complete");
         unzipFiles(minecraft_path + "/assets", "assets.zip");
       });
 
-      dl.on("error", (err) => console.log("Download assets.zip Failed", err));
-      dl.start().catch((err) => console.error(err));
+      dl.on("error", (err) => log.error("Download assets.zip Failed", err));
+      dl.start().catch((err) => log.error(err));
     } else {
       unzipFiles(minecraft_path + "/assets", "assets.zip");
     }
   } else {
-    console.log("assets are ok");
+    log.info("assets are ok");
     assets_are_ready = true;
   }
 }
@@ -492,7 +507,8 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 async function isGameReady() {
   while (!game_is_ready) {
     if (java_is_ready && assets_are_ready && files_are_ready) {
-      console.log("launching game");
+      log.info("launching game");
+      log.silly("привет от V");
       launchingGame();
       game_is_ready = true;
     }
@@ -506,9 +522,11 @@ function launchingGame() {
     platformSep = ":";
   }
 
+  log.silly("<3");
+
   fs.readFile("./launcher_data", "utf8", function (err, buffer) {
     if (err) {
-      console.log("Cant read launcher_data");
+      log.error("Cant read launcher_data");
     } else {
       buffer = buffer.split(" ");
       let accessToken = buffer[1];
@@ -517,7 +535,7 @@ function launchingGame() {
 
       fs.readFile("./java_args", "utf8", function (err, data) {
         if (err) {
-          console.log("Cant read java_args");
+          log.error("Cant read java_args");
         } else {
           let java_args = data;
           java_path += "/jdk-17.0.11";
@@ -533,7 +551,7 @@ function launchingGame() {
             "utf8",
             function (err, json_forge) {
               if (err) {
-                console.log("Cant read 1.19.2-forge-43.3.13.json");
+                log.error("Cant read 1.19.2-forge-43.3.13.json");
               } else {
                 let cp2 = [];
 
@@ -568,23 +586,14 @@ function launchingGame() {
                         let platform =
                           json_1_19_2["libraries"][i]["rules"][0]["os"]["name"];
                         if (process.platform === "win32") {
-                          if (
-                            platform === "windows" &&
-                            path.includes("windows.jar")
-                          ) {
+                          if (platform === "windows") {
                             cp1.push(path + platformSep);
                           }
                         } else if (process.platform === "linux") {
-                          if (
-                            platform === process.platform &&
-                            path.includes("linux.jar")
-                          ) {
+                          if (platform === process.platform) {
                             cp1.push(path + platformSep);
                           }
-                        } else if (
-                          process.platform === "darwin" &&
-                          path.includes("macos-arm64.jar")
-                        ) {
+                        } else if (process.platform === "darwin") {
                           if (platform === "osx") {
                             cp1.push(path + platformSep);
                           }
@@ -647,7 +656,7 @@ function launchingGame() {
                       ' --clientId "" --xuid "" --userType legacy --versionType modified --width 925 --height 530 --launchTarget forgeclient --fml.forgeVersion 43.3.13 --fml.mcVersion 1.19.2 --fml.forgeGroup net.minecraftforge --fml.mcpVersion 20220805.130853';
                     command = command.toString().replace(/\\/g, "/");
 
-                    console.log("launching minecraft with options " + command);
+                    log.info("launching minecraft with options " + command);
 
                     command = command.split(" ");
 
@@ -660,11 +669,11 @@ function launchingGame() {
                       if (data.includes("Setting user:")) {
                         BrowserWindow.fromId(6).hide();
                       }
-                      console.log(data.toString());
+                      log.info(data.toString());
                     });
 
                     launch.stderr.on("data", (data) => {
-                      console.log(data.toString());
+                      log.info(data.toString());
                     });
                   }
                 );
@@ -678,7 +687,7 @@ function launchingGame() {
 }
 
 ipcMain.on("launch", (event, arg) => {
-  console.log("Launching minecraft");
+  log.info("Launching minecraft");
 
   BrowserWindow.fromId(1).hide();
   BrowserWindow.fromId(6).show();
@@ -699,8 +708,11 @@ ipcMain.on("launch", (event, arg) => {
     verifyFiles(servertxt_path, minecraft_path, server_url);
   });
 
-  dl.on("error", (err) => console.log("Download server.txt Failed", err));
-  dl.start().catch((err) => console.error(err));
+  dl.on("error", (err) => {
+    log.error("Download server.txt Failed", err);
+    BrowserWindow.fromId(7).show();
+  });
+  dl.start().catch((err) => log.error(err));
 
   isGameReady();
 });
