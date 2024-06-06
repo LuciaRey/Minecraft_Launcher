@@ -4,6 +4,7 @@ const ipcMain = require("electron").ipcMain;
 const { nativeTheme } = require("electron");
 const childProcess = require("child_process");
 const { app, BrowserWindow } = require("electron");
+const unpacker = require("unpacker-with-progress");
 const { DownloaderHelper } = require("node-downloader-helper");
 import log from "electron-log/main";
 
@@ -428,10 +429,23 @@ function verifyFiles(src_path, dest_path, server_url) {
 }
 
 async function unzipFiles(dest_path, fileName) {
-  try {
-    log.info("Extracting " + fileName);
-    await extract(dest_path + "/" + fileName, { dir: dest_path });
-    log.info("Extraction " + fileName + " complete");
+  function unpack() {
+    let prevProgress = 0;
+    return Promise.all([
+      unpacker(dest_path + "/" + fileName, dest_path, {
+        onprogress(progress) {
+          let progr = progress.percent.toString().slice(2, 4);
+          if (progr !== prevProgress && progr !== "") {
+            log.info("Unpacking " + fileName + " " + progr + "%");
+            prevProgress = progr;
+          }
+        },
+      }),
+    ]);
+  }
+
+  unpack().then((stats) => {
+    log.info("done");
     if (fileName.includes("jdk")) {
       log.info("java is ok");
       java_is_ready = true;
@@ -440,33 +454,31 @@ async function unzipFiles(dest_path, fileName) {
       assets_are_ready = true;
     }
     fs.unlinkSync(dest_path + "/" + fileName);
-  } catch (err) {
-    log.error(err);
-    fs.unlinkSync(dest_path + "/" + fileName);
-  }
+  });
 }
 
 function verifyJava() {
   if (!fs.existsSync(java_path + "/jdk-17.0.11")) {
-    if (!fs.existsSync(java_path + "/jdk-17_windows-x64_bin.zip")) {
+    let java = "jdk-17_windows-x64_bin.zip";
+    if (process.platform === "linux") {
+      java = "jdk-17_linux-x64_bin.tar.gz";
+    }
+    if (!fs.existsSync(java_path + "/" + java)) {
       log.info("java is missing | downloading java");
 
-      const dl = new DownloaderHelper(
-        "https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.zip",
-        java_path
-      );
+      let link = "https://download.oracle.com/java/17/latest/" + java;
+
+      const dl = new DownloaderHelper(link, java_path);
 
       dl.on("end", () => {
-        log.info("Download jdk-17_windows-x64_bin.zip complete");
-        unzipFiles(java_path, "jdk-17_windows-x64_bin.zip");
+        log.info("Download " + java + " complete");
+        unzipFiles(java_path, java);
       });
 
-      dl.on("error", (err) =>
-        log.error("Download jdk-17_windows-x64_bin.zip Failed", err)
-      );
+      dl.on("error", (err) => log.error("Download " + java + " Failed", err));
       dl.start().catch((err) => log.error(err));
     } else {
-      unzipFiles(java_path, "jdk-17_windows-x64_bin.zip");
+      unzipFiles(java_path, java);
     }
   } else {
     log.info("java is ok");
@@ -541,6 +553,10 @@ function launchingGame() {
           java_path += "/jdk-17.0.11";
 
           let filename = "" + java_path + "/bin/javaw.exe";
+          if (process.platform == "linux") {
+            filename = "" + java_path + "/bin/java";
+          }
+
           filename = filename.toString().replace(/\\/g, "/");
 
           java_args = java_args.toString().replace(/ /g, " ");
