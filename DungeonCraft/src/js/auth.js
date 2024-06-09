@@ -1,6 +1,3 @@
-const fs = require("fs");
-const ipc = require("electron").ipcRenderer;
-
 window.onclick = document.getElementById("name").onkeyup = function (e) {
   getValue();
 };
@@ -20,7 +17,8 @@ function getValue() {
   password = document.getElementById("password");
 }
 
-function auth() {
+async function auth() {
+  let tokens = await window.electronAPI.getSettings("tokens");
   fetch(
     "https://authserver.ely.by/api/users/profiles/minecraft/" + nickname.value
   )
@@ -33,7 +31,7 @@ function auth() {
       let user = {
         username: nickname.value.toString(),
         password: password.value.toString(),
-        clientToken: "UeNGguZrQNAnpJPXkTVyHifTyncOUv",
+        clientToken: tokens.clientToken,
       };
 
       fetch("https://authserver.ely.by/auth/authenticate", {
@@ -45,39 +43,21 @@ function auth() {
       })
         .then((response) => response.json())
         .then((data) => {
-          writeValue(
-            "launcher_data",
-            data.selectedProfile.id +
-              " " +
-              data.accessToken +
-              " " +
-              nickname.value
-          );
-          closeWindow();
+          let user = {
+            uuid: data.selectedProfile.id,
+            accessToken: data.accessToken,
+            nickname: nickname.value,
+          };
+          window.electronAPI.changeSettings(user);
+          window.electronAPI.closeWindow();
         })
         .catch(function (error) {
           console.log("Request failed", error);
-          ipc.send("error", "пароль");
+          window.electronAPI.error("password");
         });
     })
     .catch(function (error) {
       console.log("Request failed", error);
-      ipc.send("error", "ник");
+      window.electronAPI.error("nickname");
     });
-}
-
-function writeValue(file, data) {
-  fs.writeFile("./" + file, data, (err) => {
-    if (err) {
-      console.log("Cant write to file");
-    } else {
-      console.log("File was created");
-    }
-  });
-}
-
-function closeWindow() {
-  if (nickname.value !== "") {
-    ipc.send("window_actions", ["close", 3]);
-  }
 }

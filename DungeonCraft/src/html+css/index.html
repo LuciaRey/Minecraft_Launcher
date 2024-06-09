@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="../html+css/style.css" />
+    <meta charset="utf-8" />
+    <title>DungeonCraft</title>
+  </head>
+  <body>
+    <header id="titlebar">
+      <div id="drag-region"></div>
+    </header>
+    <div id="preloader" class="preloader"></div>
+    <script>
+      window.onload = function () {
+        document.body.classList.add("loaded_hiding");
+        window.setTimeout(function () {
+          document.body.classList.add("loaded");
+          document.body.classList.remove("loaded_hiding");
+        }, 500);
+      };
+    </script>
+    <div id="main">
+      <img class="image" src="../images/DungeonCraft.png" />
+      <div class="play">
+        <button id="playButton" onclick="launch()">Играть</button>
+      </div>
+      <button
+        class="settingsIndexButton"
+        id="settingsButton"
+        onclick="settings()"
+      ></button>
+      <script src="../js/index_renderer.js"></script>
+    </div>
+  </body>
+</html>

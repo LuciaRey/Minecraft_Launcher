@@ -3,19 +3,12 @@
   <head>
     <link rel="stylesheet" href="./style.css" />
     <meta charset="utf-8" />
-    <title>DungeonCraft</title>
+    <title>authentication</title>
   </head>
   <body>
-    <div id="preloader" class="preloader"></div>
-    <script>
-      window.onload = function () {
-        document.body.classList.add("loaded_hiding");
-        window.setTimeout(function () {
-          document.body.classList.add("loaded");
-          document.body.classList.remove("loaded_hiding");
-        }, 500);
-      };
-    </script>
+    <header id="titlebar">
+      <div id="drag-region"></div>
+    </header>
     <div class="authfieldset">
       <fieldset>
         <legend>Введите данные</legend>
@@ -37,6 +30,6 @@
         <p><button id="authButton" onclick="auth()">Войти</button></p>
       </fieldset>
     </div>
-    <script src="./auth.js"></script>
+    <script src="../js/auth.js"></script>
   </body>
 </html>

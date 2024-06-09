@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="./style.css" />
+    <meta charset="utf-8" />
+    <title>settings</title>
+  </head>
+  <body>
+    <header id="titlebar">
+      <div id="drag-region"></div>
+    </header>
+    <div id="main">
+      <div class="settings">
+        <fieldset>
+          <legend>Изменить ник</legend>
+          <label for="name">
+            <p id="nickname">Ваш текущий ник:</p>
+            <button class="settingsButton" id="changeName" onclick="auth()">
+              Ввести новый ник
+            </button>
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>Сменить путь к игре</legend>
+          <label for="game_path">
+            <p>Путь к игре: <strong id="gamePath"></strong></p>
+            <button class="settingsButton" id="gamePathBtn">
+              Выбрать путь
+            </button>
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>Сменить путь к java</legend>
+          <label for="java_path">
+            <p>Путь к java: <strong id="javaPath"></strong></p>
+            <button class="settingsButton" id="javaPathBtn">
+              Выбрать путь
+            </button>
+          </label>
+        </fieldset>
+        <div class="java">
+          <fieldset>
+            <legend>Аргументы java</legend>
+            <label for="javaargs">
+              <textarea required type="text" id="javaargs" rows="2"></textarea>
+            </label>
+          </fieldset>
+        </div>
+      </div>
+      <script src="../js/settings.js"></script>
+    </div>
+  </body>
+</html>

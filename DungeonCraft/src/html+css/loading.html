@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="./style.css" />
+    <meta charset="utf-8" />
+    <title>DungeonCraft</title>
+  </head>
+  <body>
+    <header id="titlebar">
+      <div id="drag-region"></div>
+    </header>
+    <div id="main">
+      <div class="load">
+        <img src="../images/preloader.gif" alt="" />
+        <p>Launching minecraft...</p>
+        <div class="progress-bar">
+          <div class="fill"></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      window.onbeforeunload = () => window.electronAPI.closeApp();
+    </script>
+  </body>
+</html>
